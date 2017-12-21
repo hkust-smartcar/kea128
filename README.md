@@ -1,7 +1,7 @@
 kea128
 ==============
 
-[![Build Status](https://travis-ci.org/hkust-smartcar/kea128.svg?branch=master)](https://travis-ci.org/hkust-smartcar/libsccc)
+[![Build Status](https://travis-ci.org/hkust-smartcar/kea128.svg?branch=master)](https://travis-ci.org/hkust-smartcar/kea128)
 
 Kinetis KEA128 peripheral and component library for the HKUST SmartCar Team
 
