@@ -16,14 +16,14 @@ public:
   /**
    * @param Number of clock cycle per tick
    */
-  static void Init(uint32_t);
+  static void Init();
   static void StartCount(uint32_t = 0x00);
   static void DelayCycle(uint32_t);
   static void DelayMs(uint32_t);
   static uint32_t GetTime();
-
-private:
   static volatile uint32_t m_cur_ticks;
+private:
+
 
 }; // namespace Systick
 } // namespace libbase
