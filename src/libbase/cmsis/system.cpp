@@ -70,4 +70,8 @@ void SystemInit() {
 	SIM->SOPT0 = 0x0c; //Disable NMI pin
 }
 
-
+extern "C" {
+void NMI_Handler(void) {
+	SIM->SOPT0 = 0x0c; //Disable NMI pin
+}
+}
