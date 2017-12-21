@@ -21,14 +21,14 @@ class Gpo;
 class Gpi {
 
 public:
-  Gpi(Pin);
+  Gpi(Pin::Name);
   bool Get() const;
   Gpo ToGpo(bool init);
-  Pin GetPin() const { return m_pin; }
+  Pin::Name GetPin() const { return m_pin; }
 
 private:
   void Uninit();
-  Pin m_pin;
+  Pin::Name m_pin;
   uint8_t ptx;
   uint8_t ptn;
 };
@@ -36,15 +36,15 @@ private:
 class Gpo {
 
 public:
-  Gpo(Pin, bool init);
+  Gpo(Pin::Name, bool init);
   void Set(bool is_high);
   void Turn();
   Gpi ToGpi();
-  Pin GetPin() { return m_pin; };
+  Pin::Name GetPin() { return m_pin; };
 
 private:
   void Uninit();
-  Pin m_pin;
+  Pin::Name m_pin;
   uint8_t ptx;
   uint8_t ptn;
 

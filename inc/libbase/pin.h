@@ -11,7 +11,9 @@
 
 namespace libbase {
 
-enum class Pin : uint8_t {
+namespace Pin {
+
+enum class Name : uint8_t {
     kPta0 = 0,
     kPta1,
     kPta2,
@@ -92,7 +94,9 @@ enum class Pin : uint8_t {
     kPti5,
     kPti6,
 
-    kDisable = 71
+    kDisabled = 71
 };
+
+} // namespace Pin
 
 } // namespace libbase

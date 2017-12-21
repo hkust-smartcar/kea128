@@ -10,7 +10,7 @@
 using libbase::Gpo;
 using libbase::Gpi;
 
-Gpi::Gpi(Pin p) {
+Gpi::Gpi(Pin::Name p) {
   ptx = PTX(p);
   ptn = PTn(p);
 
@@ -28,7 +28,7 @@ Gpo Gpi::ToGpo(bool init) {
   return Gpo(m_pin, init);
 }
 
-Gpo::Gpo(Pin p, bool init) {
+Gpo::Gpo(Pin::Name p, bool init) {
   ptx = PTX(p);
   ptn = PTn(p);
 
