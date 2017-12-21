@@ -10,61 +10,55 @@
 
 namespace libbase {
 
-uint32_t Systick::m_period_per_tick = 0;
 volatile uint32_t Systick::m_cur_ticks = 0;
 
-void Systick::Init(uint32_t cycle) {
-  cycle &= 0x00ffffff;
-  m_period_per_tick = cycle;
-  StartCount();
+void Systick::Init() {
+	get_clk();
+	core_clk_khz &= 0x00ffffff;
+	StartCount();
 }
 
 void Systick::StartCount(uint32_t val) {
-  SysTick->LOAD = m_period_per_tick;
-  SysTick->VAL = val;
-  SysTick->CTRL = ( 0 | SysTick_CTRL_ENABLE_Msk
-                      | SysTick_CTRL_TICKINT_Msk
-                      | SysTick_CTRL_CLKSOURCE_Msk);
+	SysTick->LOAD = core_clk_khz / COUNT_LOAD_DIV;
+	SysTick->VAL = val;
+	SysTick->CTRL = (0 | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk);
 }
 
 uint32_t Systick::GetTime() {
-  return Systick::m_cur_ticks;
+	return Systick::m_cur_ticks;
 }
 
 void Systick::DelayCycle(uint32_t cycle) {
-  if (cycle == 0) return;
+	if (cycle == 0)
+		return;
 
 	uint32_t tim = SysTick->VAL;
 
-  SysTick->CTRL = 0x00;
-  SysTick->LOAD = cycle;
-  SysTick->VAL = 0x00;
-  SysTick->CTRL = ( 0 | SysTick_CTRL_ENABLE_Msk
-                      | SysTick_CTRL_CLKSOURCE_Msk);
-  while ( !(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk));
+	SysTick->CTRL = 0x00;
+	SysTick->LOAD = cycle;
+	SysTick->VAL = 0x00;
+	SysTick->CTRL = (0 | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk);
+	while (!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk))
+		;
 
-  StartCount(tim);
+	StartCount(tim);
 }
 
 void Systick::DelayMs(uint32_t ms) {
-  if (ms == 0) return;
+	if (ms == 0)
+		return;
 
-  uint32_t tim = SysTick->VAL;
+	uint32_t tim = SysTick->VAL;
+	while (ms--)
+		DelayCycle(core_clk_khz);
 
-  SysTick->CTRL = 0x00;
-  SysTick->LOAD = core_clk_khz * ms;
-  SysTick->VAL = 0x00;
-  SysTick->CTRL = ( 0 | SysTick_CTRL_ENABLE_Msk
-                      | SysTick_CTRL_CLKSOURCE_Msk);
-  while ( !(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk));
-
-  StartCount(tim);
+	StartCount(tim);
 }
 
 extern "C" {
-  void SysTick_Handler(void) {
-    Systick::m_cur_ticks++;
-  }
+void SysTick_Handler(void) {
+	Systick::m_cur_ticks++;
+}
 }
 
 }

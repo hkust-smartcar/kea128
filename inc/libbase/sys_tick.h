@@ -11,6 +11,7 @@
 namespace libbase {
 class Systick {
 public:
+#define COUNT_LOAD_DIV 100 //10US per tick
 
   /**
    * @param Number of clock cycle per tick
@@ -21,10 +22,8 @@ public:
   static void DelayMs(uint32_t);
   static uint32_t GetTime();
 
-  static volatile uint32_t m_cur_ticks;
 private:
-  static uint32_t m_period_per_tick;  // tick per cycle period
-
+  static volatile uint32_t m_cur_ticks;
 
 }; // namespace Systick
 } // namespace libbase
