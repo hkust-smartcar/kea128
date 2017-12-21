@@ -67,7 +67,7 @@ void SystemInit() {
 		}; //Wait until output of FLL selected
 	}
 
-//	SIM->SOPT0 = 0x0c; //Disable NMI pin
+	SIM->SOPT0 = 0x0c; //Disable NMI pin
 }
 
 
