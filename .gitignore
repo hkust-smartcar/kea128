@@ -1,32 +1,10 @@
-# Prerequisites
-*.d
+# Ignore all sub-dirs but inc/ and src/
+*/*
+!inc/*
+!src/*
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Ignore additional files in root dir
+# Eclipse
+.project
+.cproject
+/Debug/
