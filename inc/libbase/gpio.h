@@ -22,6 +22,7 @@ class Gpi {
 
 public:
   Gpi(Pin::Name);
+  ~Gpi() { Uninit(); };
   bool Get() const;
   Gpo ToGpo(bool init);
   Pin::Name GetPin() const { return m_pin; }
@@ -37,6 +38,7 @@ class Gpo {
 
 public:
   Gpo(Pin::Name, bool init);
+  ~Gpo() { Uninit(); };
   void Set(bool is_high);
   void Turn();
   Gpi ToGpi();

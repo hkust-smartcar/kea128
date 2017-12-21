@@ -28,6 +28,11 @@ Gpo Gpi::ToGpo(bool init) {
   return Gpo(m_pin, init);
 }
 
+void Gpi::Uninit() {
+  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
+}
+
 Gpo::Gpo(Pin::Name p, bool init) {
   ptx = PTX(p);
   ptn = PTn(p);
@@ -45,6 +50,11 @@ void Gpo::Set(bool is_high) {
     RESET_BIT(MEM_MAPS[ptx]->PDOR, ptn);
   else
     SET_BIT(MEM_MAPS[ptx]->PDOR, ptn);
+}
+
+void Gpo::Uninit() {
+  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
 }
 
 void Gpo::Turn() {
