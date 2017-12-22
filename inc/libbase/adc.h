@@ -37,7 +37,7 @@ public:
     k8, k10, k12
   };
 
-  Adc(Pin::Name, Bit);
+  Adc(Pin::Name, Bit = Bit::k12);
   ~Adc();
   uint16_t FetchOnce();
 
@@ -45,6 +45,7 @@ private:
   void Uninit();
   Adc::Name m_pin;
   Bit m_bit;
+  static uint8_t m_count;
 
 };
 } // namespace libbase

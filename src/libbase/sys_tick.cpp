@@ -39,8 +39,7 @@ void Systick::DelayCycle(uint32_t cycle) {
 	SysTick->LOAD = cycle;
 	SysTick->VAL = 0x00;
 	SysTick->CTRL = (0 | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk);
-	while (!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk))
-		;
+	while (!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk));
 
 	StartCount(tim);
 }
@@ -50,8 +49,13 @@ void Systick::DelayMs(uint32_t ms) {
 		return;
 
 	uint32_t tim = SysTick->VAL;
-	while (ms--)
-		DelayCycle(core_clk_khz);
+	while (ms--) {
+	  SysTick->CTRL = 0x00;
+      SysTick->LOAD = core_clk_khz;
+      SysTick->VAL = 0x00;
+      SysTick->CTRL = (0 | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk);
+      while (!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk));
+	}
 
 	StartCount(tim);
 }
