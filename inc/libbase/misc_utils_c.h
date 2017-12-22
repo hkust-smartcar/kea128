@@ -14,3 +14,12 @@
 #define CLEAR_BIT(x, n) RESET_BIT(x, n)
 #define GET_BIT(x, n) (((x) >> (n)) & 1)
 #define GET_BITS(x, n, mask) (((x) & (mask)) >> n)
+#define __ISR __attribute__((__interrupt__))
+#ifdef DEBUG
+#define __BREAKPOINT() asm("BKPT 255")
+
+#else
+#define __BREAKPOINT()
+
+#endif
+#define __HARDFAULT() *((char*)0) = 42

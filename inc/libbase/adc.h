@@ -6,6 +6,7 @@
  * Refer to LICENSE for details
  */
 #pragma once
+#include "pin.h"
 
 namespace libbase {
 
@@ -32,6 +33,18 @@ public:
     kDisabled = 16
   };
 
+  enum struct Bit {
+    k8, k10, k12
+  };
+
+  Adc(Pin::Name, Bit);
+  ~Adc();
+  uint16_t FetchOnce();
+
+private:
+  void Uninit();
+  Adc::Name m_pin;
+  Bit m_bit;
 
 };
 } // namespace libbase

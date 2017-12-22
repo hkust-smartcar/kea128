@@ -5,6 +5,7 @@
  * Copyright (c) 2014-2017 HKUST SmartCar Team
  * Refer to LICENSE for details
  */
+#include "libbase/misc_utils_c.h"
 #include "libbase/sys_tick.h"
 #include "libbase/cmsis/system.h"
 
@@ -56,7 +57,7 @@ void Systick::DelayMs(uint32_t ms) {
 }
 
 extern "C" {
-void SysTick_Handler(void) {
+__ISR void SysTick_Handler(void) {
 	Systick::m_cur_ticks++;
 }
 }
