@@ -5,20 +5,36 @@
  * Copyright (c) 2014-2017 HKUST SmartCar Team
  * Refer to LICENSE for details
  */
+#include "assert.h"
 #include "libbase/gpio.h"
+#include "libbase/pinout/s9keaz128_lqfp80.h"
+
 
 using libbase::Gpo;
 using libbase::Gpi;
 
-Gpi::Gpi(Pin::Name p) {
+Gpi::Gpi(Pin::Name p) : m_pin(S9keaz128::GetGpio(p)){
+
+  assert(m_pin != Gpio::Name::kDisabled);
+
   ptx = PTX(p);
   ptn = PTn(p);
 
   RESET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
   RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
 
-  m_pin = p;
 }
+
+Gpi::Gpi(Gpio::Name p) : m_pin(p){
+
+  ptx = PTX(p);
+  ptn = PTn(p);
+
+  RESET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
+
+}
+
 
 bool Gpi::Get() const {
   return ((MEM_MAPS[ptx]->PDIR) >> ptn) & 0x1;
@@ -33,7 +49,10 @@ void Gpi::Uninit() {
   RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
 }
 
-Gpo::Gpo(Pin::Name p, bool init) {
+Gpo::Gpo(Pin::Name p, bool init) : m_pin(S9keaz128::GetGpio(p)){
+
+  assert(m_pin != Gpio::Name::kDisabled);
+
   ptx = PTX(p);
   ptn = PTn(p);
 
@@ -42,7 +61,17 @@ Gpo::Gpo(Pin::Name p, bool init) {
 
   Set(init);
 
-  m_pin = p;
+}
+
+Gpo::Gpo(Gpio::Name p, bool init) : m_pin(p){
+  ptx = PTX(p);
+  ptn = PTn(p);
+
+  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+  SET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
+
+  Set(init);
+
 }
 
 void Gpo::Set(bool is_high) {

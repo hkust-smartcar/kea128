@@ -10,11 +10,13 @@
 #pragma once
 
 #include "libbase/pin.h"
+#include "libbase/gpio.h"
 #include "libbase/adc.h"
 
 namespace libbase {
 namespace S9keaz128 {
 
+  Gpio::Name GetGpio(const Pin::Name);
   Adc::Name GetAdc(const Pin::Name);
 
 }

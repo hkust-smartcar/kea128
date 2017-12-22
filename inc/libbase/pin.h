@@ -5,10 +5,9 @@
  * Copyright (c) 2014-2017 HKUST SmartCar Team
  * Refer to LICENSE for details
  */
+#pragma once
 #include "cmsis/SKEAZ1284.h"
 #include "misc_utils_c.h"
-#pragma once
-
 namespace libbase {
 
 namespace Pin {

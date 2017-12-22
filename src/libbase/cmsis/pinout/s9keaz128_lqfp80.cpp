@@ -13,6 +13,19 @@ namespace libbase {
 
 namespace S9keaz128 {
 
+Gpio::Name GetGpio(const Pin::Name pin) {
+  if ((Pin::Name::kPtc6 <= pin && pin <= Pin::Name::kPtc7)
+      || (Pin::Name::kPtd2 <= pin && pin <= Pin::Name::kPtd7)
+      || (Pin::Name::kPte1 <= pin && pin <= Pin::Name::kPte6)
+      || (Pin::Name::kPtf0 <= pin && pin <= Pin::Name::kPtf1)
+      || (Pin::Name::kPtg0 <= pin && pin <= Pin::Name::kPtg3)
+      || (Pin::Name::kPth5 <= pin && pin <= Pin::Name::kPth7)
+      || (Pin::Name::kPti3 <= pin && pin <= Pin::Name::kPti6)
+      )
+    return (Gpio::Name)pin;
+  else return Gpio::Name::kDisabled;
+}
+
 Adc::Name GetAdc(const Pin::Name pin) {
 
   switch (pin) {

@@ -14,5 +14,3 @@
 #define CLEAR_BIT(x, n) RESET_BIT(x, n)
 #define GET_BIT(x, n) (((x) >> (n)) & 1)
 #define GET_BITS(x, n, mask) (((x) & (mask)) >> n)
-#define PTX(p) { (uint8_t)p >> 5 }
-#define PTn(p) { (uint8_t)p & 0x1f }
