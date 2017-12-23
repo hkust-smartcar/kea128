@@ -27,11 +27,17 @@ public:
 	Ftm(FTMn ftmn, EXT_CLK external_clk);
 	~Ftm();
 	void InitChannel(CHANNEL ch);
+	void InitOutput(CHANNEL ch, uint32_t freq, uint32_t duty_cycle);
+	void SetDutyCycle(CHANNEL ch, uint32_t duty_cycle);
+	void SetFreq(uint32_t freq);
 
+	
 private:
 	const FTMn ftmn;
 	const EXT_CLK external_clk;
+	uint16_t period;
 	uint8_t opened_channel;
+	bool freq_set;
 };
 
 }
