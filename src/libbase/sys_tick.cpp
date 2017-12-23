@@ -1,5 +1,5 @@
 /*
- * sys_tick.h
+ * sys_tick.cpp
  *
  * Author: Peter Tse (mcreng)
  * Copyright (c) 2014-2017 HKUST SmartCar Team
