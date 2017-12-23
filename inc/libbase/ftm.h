@@ -30,7 +30,9 @@ public:
 	void InitOutput(CHANNEL ch, uint32_t freq, uint32_t duty_cycle);
 	void SetDutyCycle(CHANNEL ch, uint32_t duty_cycle);
 	void SetFreq(uint32_t freq);
-
+	uint16_t GetCount();
+	void CleanCount();
+	void TurnCount();
 	
 private:
 	const FTMn ftmn;
