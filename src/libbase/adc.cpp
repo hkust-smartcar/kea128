@@ -41,6 +41,18 @@ uint16_t Adc::FetchOnce() {
   return result;
 }
 
+float Adc::FetchOnceF() {
+  float resultF = FetchOnce() * 3.3f;
+  switch (m_bit) {
+  case Bit::k8:
+    return resultF / 0x00FF;
+  case Bit::k10:
+    return resultF / 0x02FF;
+  default:
+    return resultF / 0x0FFF;
+  }
+}
+
 void Adc::Uninit() {
   if (m_count-- == 0) SIM->SCGC &= ~SIM_SCGC_ADC_MASK; // Disable ADC time
   RESET_BIT(ADC->APCTL1, (uint8_t)m_pin); // Disable ADC pin
