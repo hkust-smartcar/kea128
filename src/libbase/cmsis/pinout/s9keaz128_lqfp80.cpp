@@ -38,14 +38,14 @@ Adc::Name GetAdc(const Pin::Name pin) {
       return Adc::Name::kAdc0Se2;
     case Pin::Name::kPta7:
       return Adc::Name::kAdc0Se3;
-    case Pin::Name::kPtb0:
-      return Adc::Name::kAdc0Se4;
-    case Pin::Name::kPtb1:
-      return Adc::Name::kAdc0Se5;
-    case Pin::Name::kPtb2:
-      return Adc::Name::kAdc0Se6;
-    case Pin::Name::kPtb3:
-      return Adc::Name::kAdc0Se7;
+//    case Pin::Name::kPtb0:
+//      return Adc::Name::kAdc0Se4;
+//    case Pin::Name::kPtb1:
+//      return Adc::Name::kAdc0Se5;
+//    case Pin::Name::kPtb2:
+//      return Adc::Name::kAdc0Se6;
+//    case Pin::Name::kPtb3:
+//      return Adc::Name::kAdc0Se7;
     case Pin::Name::kPtc0:
       return Adc::Name::kAdc0Se8;
     case Pin::Name::kPtc1:
