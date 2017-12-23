@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2017 HKUST SmartCar Team
  * Refer to LICENSE for details
  */
-#include <cmath>
+#include "libbase/math.h"
 #include "assert.h"
 #include "libbase/i2c_master.h"
 namespace libbase {
@@ -36,7 +36,7 @@ I2CMaster::I2CMaster(Name n, uint32_t baud) {
 
   while (cnt) {
     cnt--;
-    diff = std::abs(scldiv - SCLDivider[cnt]);
+    diff = libbase::abs(scldiv - SCLDivider[cnt]);
     if (diff == 0) {
       min_diff_id = cnt;
       break;
