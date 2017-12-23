@@ -41,6 +41,11 @@ public:
   ~Adc();
   uint16_t FetchOnce();
 
+  /**
+   * Get result in range [0, 3.3]
+   */
+  float FetchOnceF();
+
 private:
   void Uninit();
   Adc::Name m_pin;
