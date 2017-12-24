@@ -29,7 +29,7 @@ Ftm::Ftm(FTMn ftmn, EXT_CLK external_clk, void (*listener)(void)) :
 	if (external_clk != EXT_CLK::kDisable) {
 		SIM->PINSEL &= ~1 << (SIM_PINSEL_FTM0CLKPS_SHIFT + (uint8_t) external_clk * 2);
 		PORT->PUE1 |= (uint32_t)(1 << ((uint32_t)((external_clk == EXT_CLK::kDisable) ? Pin::Name::kPte0 : Pin::Name::kPte7) & 0x1f));	//pin pull up
-		uint32_t sc = FTM_SC_PS(0) | FTM_SC_CLKS(3);
+		uint32_t sc = FTM_SC_PS(0) | FTM_SC_CLKS(3) | ((listener) ? FTM_SC_TOIE_MASK : 0);
 		switch (ftmn) {
 		case FTMn::kFTM0:
 			ftm0_listener = listener;
