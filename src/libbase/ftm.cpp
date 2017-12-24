@@ -10,12 +10,17 @@
 #include "libbase/ftm.h"
 #include "libbase/cmsis/SKEAZ1284.h"
 #include "libbase/cmsis/system.h"
+#include "libbase/misc_utils_c.h"
 
 namespace libbase {
 
 #define PRECISON 1000u
 
-Ftm::Ftm(FTMn ftmn, EXT_CLK external_clk) :
+void (*ftm0_listener)(void);
+void (*ftm1_listener)(void);
+void (*ftm2_listener)(void);
+
+Ftm::Ftm(FTMn ftmn, EXT_CLK external_clk, void (*listener)(void)) :
 		ftmn(ftmn), external_clk(external_clk) {
 	period = 0;
 	opened_channel = 0;
@@ -27,14 +32,17 @@ Ftm::Ftm(FTMn ftmn, EXT_CLK external_clk) :
 		uint32_t sc = FTM_SC_PS(0) | FTM_SC_CLKS(3);
 		switch (ftmn) {
 		case FTMn::kFTM0:
+			ftm0_listener = listener;
 			FTM0->SC |= sc;
 			FTM0->CNT = 0;
 			break;
 		case FTMn::kFTM1:
+			ftm1_listener = listener;
 			FTM1->SC |= sc;
 			FTM0->CNT = 0;
 			break;
 		case FTMn::kFTM2:
+			ftm2_listener = listener;
 			FTM2->SC |= sc;
 			FTM0->CNT = 0;
 			break;
@@ -148,6 +156,20 @@ void Ftm::TurnCount() {
 		FTM2->SC ^= FTM_SC_CPWMS_MASK;
 		break;
 	}
+}
+
+extern "C" {
+__ISR void FTM0_Handler(void) {
+	ftm0_listener();
+}
+
+__ISR void FTM1_Handler(void) {
+	ftm1_listener();
+}
+
+__ISR void FTM2_Handler(void) {
+	ftm2_listener();
+}
 }
 
 }

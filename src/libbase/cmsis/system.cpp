@@ -1,12 +1,15 @@
 /*
  * system.cpp
  *
- * Author: LeeChunHei
+ * Author: Leslie Lee (LeeChunHei)
+ * Copyright (c) 2014-2017 HKUST SmartCar Team
+ * Refer to LICENSE for details
  */
 
 #include <stdint.h>
 #include "libbase/cmsis/system.h"
 #include "libbase/cmsis/SKEAZ1284.h"
+#include "libbase/misc_utils_c.h"
 
 volatile uint32_t ics_clk_khz = 0;
 volatile uint32_t ftm_clk_khz = 0;
@@ -71,7 +74,7 @@ void SystemInit() {
 }
 
 extern "C" {
-void NMI_Handler(void) {
+__ISR void NMI_Handler(void) {
 	SIM->SOPT0 = 0x0c; //Disable NMI pin
 }
 }
