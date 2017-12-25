@@ -61,7 +61,7 @@ Ftm::~Ftm() {
 void Ftm::InitChannel(CHANNEL ch) {
 	if ((opened_channel & (1 << (uint8_t) ch)) || ch == CHANNEL::kDisable)	//return if the channel opened before or it is kDisable
 		return;
-	assert(ftmn != Name::kFTM2);
+	assert(ftmn == Name::kFTM2);
 	SIM->PINSEL1 |= 1 << (SIM_PINSEL1_FTM2PS0_WIDTH * (uint8_t) ch);
 	opened_channel |= (1 << (uint8_t) ch);
 }
@@ -76,7 +76,7 @@ void Ftm::InitOutput(CHANNEL ch, uint32_t freq, uint32_t duty_cycle) {
 	uint8_t ps = 0;
 	for (; (mod >> ps) >= 1; ++ps) {
 	}
-	assert(ps > 0x07);
+	assert(ps <= 0x07);
 	mod = (clk_hz >> ps) / freq;
 	period = mod;
 	//Use FTM2 base ptr only as only FTM2 can set pwm output
@@ -93,7 +93,7 @@ void Ftm::SetDutyCycle(CHANNEL ch, uint32_t duty_cycle) {
 	if (!(opened_channel & (1 << (uint8_t) ch))) {
 		InitChannel(ch);
 	}
-	assert(!freq_set);
+	assert(freq_set);
 	FTM2->CONTROLS[(uint8_t) ch].CnV = (duty_cycle * (period - 0 + 1)) / PRECISON;
 }
 
@@ -104,7 +104,7 @@ void Ftm::SetFreq(uint32_t freq) {
 	uint8_t ps = 0;
 	for (; (mod >> ps) >= 1; ++ps) {
 	}
-	assert(ps > 0x07);
+	assert(ps <= 0x07);
 	mod = (clk_hz >> ps) / freq;
 	period = mod;
 	FTM2->MOD = mod;
