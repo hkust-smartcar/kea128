@@ -12,7 +12,7 @@ namespace libbase {
 
 class Ftm {
 public:
-	enum struct FTMn {
+	enum struct Name {
 		kFTM0 = 0, kFTM1, kFTM2 = 2
 	};
 
@@ -24,7 +24,7 @@ public:
 		kCh0 = 0, kCh1, kCh2, kCh3, kDisable = 4
 	};
 
-	Ftm(FTMn ftmn, EXT_CLK external_clk, void (*listener)(void));
+	Ftm(Name ftmn, EXT_CLK external_clk, void (*listener)(Ftm*));
 	~Ftm();
 	void InitChannel(CHANNEL ch);
 	void InitOutput(CHANNEL ch, uint32_t freq, uint32_t duty_cycle);
@@ -35,7 +35,7 @@ public:
 	void TurnCount();
 	
 private:
-	const FTMn ftmn;
+	const Name ftmn;
 	const EXT_CLK external_clk;
 	uint16_t period;
 	uint8_t opened_channel;

@@ -14,13 +14,19 @@
 
 namespace libbase {
 
+static FTM_Type * const FTMX[] = FTM_BASES;
+
 #define PRECISON 1000u
 
-void (*ftm0_listener)(void);
-void (*ftm1_listener)(void);
-void (*ftm2_listener)(void);
+void (*ftm0_listener)(Ftm *ftm);
+void (*ftm1_listener)(Ftm *ftm);
+void (*ftm2_listener)(Ftm *ftm);
 
-Ftm::Ftm(FTMn ftmn, EXT_CLK external_clk, void (*listener)(void)) :
+Ftm *ftm0;
+Ftm *ftm1;
+Ftm *ftm2;
+
+Ftm::Ftm(Name ftmn, EXT_CLK external_clk, void (*listener)(Ftm*)) :
 		ftmn(ftmn), external_clk(external_clk) {
 	period = 0;
 	opened_channel = 0;
@@ -29,24 +35,22 @@ Ftm::Ftm(FTMn ftmn, EXT_CLK external_clk, void (*listener)(void)) :
 	if (external_clk != EXT_CLK::kDisable) {
 		SIM->PINSEL &= ~1 << (SIM_PINSEL_FTM0CLKPS_SHIFT + (uint8_t) external_clk * 2);
 		PORT->PUE1 |= (uint32_t)(1 << ((uint32_t)((external_clk == EXT_CLK::kDisable) ? Pin::Name::kPte0 : Pin::Name::kPte7) & 0x1f));	//pin pull up
-		uint32_t sc = FTM_SC_PS(0) | FTM_SC_CLKS(3) | ((listener) ? FTM_SC_TOIE_MASK : 0);
 		switch (ftmn) {
-		case FTMn::kFTM0:
+		case Name::kFTM0:
 			ftm0_listener = listener;
-			FTM0->SC |= sc;
-			FTM0->CNT = 0;
+			ftm0 = this;
 			break;
-		case FTMn::kFTM1:
+		case Name::kFTM1:
 			ftm1_listener = listener;
-			FTM1->SC |= sc;
-			FTM0->CNT = 0;
+			ftm1 = this;
 			break;
-		case FTMn::kFTM2:
+		case Name::kFTM2:
 			ftm2_listener = listener;
-			FTM2->SC |= sc;
-			FTM0->CNT = 0;
+			ftm2 = this;
 			break;
 		}
+		FTMX[(uint8_t)ftmn]->SC|=(FTM_SC_PS(0) | FTM_SC_CLKS(3) | ((listener) ? FTM_SC_TOIE_MASK : 0));
+		FTMX[(uint8_t)ftmn]->CNT=0;
 	}
 }
 
@@ -57,7 +61,7 @@ Ftm::~Ftm() {
 void Ftm::InitChannel(CHANNEL ch) {
 	if ((opened_channel & (1 << (uint8_t) ch)) || ch == CHANNEL::kDisable)	//return if the channel opened before or it is kDisable
 		return;
-	assert(ftmn < FTMn::kFTM2);
+	assert(ftmn != Name::kFTM2);
 	SIM->PINSEL1 |= 1 << (SIM_PINSEL1_FTM2PS0_WIDTH * (uint8_t) ch);
 	opened_channel |= (1 << (uint8_t) ch);
 }
@@ -110,65 +114,31 @@ void Ftm::SetFreq(uint32_t freq) {
 }
 
 uint16_t Ftm::GetCount() {
-	switch (ftmn) {
-	case FTMn::kFTM0:
-		return FTM0->CNT;
-		break;
-	case FTMn::kFTM1:
-		return FTM1->CNT;
-		break;
-	case FTMn::kFTM2:
-		return FTM2->CNT;
-		break;
-	}
-	return 0;
+	return FTMX[(uint8_t) ftmn]->CNT;
 }
 
 void Ftm::CleanCount() {
-	switch (ftmn) {
-	case FTMn::kFTM0:
-		FTM0->CNT = 0;
-		break;
-	case FTMn::kFTM1:
-		FTM1->CNT = 0;
-		break;
-	case FTMn::kFTM2:
-		FTM2->CNT = 0;
-		break;
-	}
+	FTMX[(uint8_t) ftmn]->CNT = 0;
 }
 
 void Ftm::TurnCount() {
-	switch (ftmn) {
-	case FTMn::kFTM0:
-		if (FTM0->FMS & FTM_FMS_WPEN_MASK)
-			FTM0->MODE |= FTM_MODE_WPDIS_MASK;
-		FTM0->SC ^= FTM_SC_CPWMS_MASK;
-		break;
-	case FTMn::kFTM1:
-		if (FTM1->FMS & FTM_FMS_WPEN_MASK)
-			FTM1->MODE |= FTM_MODE_WPDIS_MASK;
-		FTM1->SC ^= FTM_SC_CPWMS_MASK;
-		break;
-	case FTMn::kFTM2:
-		if (FTM2->FMS & FTM_FMS_WPEN_MASK)
-			FTM2->MODE |= FTM_MODE_WPDIS_MASK;
-		FTM2->SC ^= FTM_SC_CPWMS_MASK;
-		break;
-	}
+	if (FTMX[(uint8_t) ftmn])
+		if (FTMX[(uint8_t) ftmn]->FMS & FTM_FMS_WPEN_MASK)
+			FTMX[(uint8_t) ftmn]->MODE |= FTM_MODE_WPDIS_MASK;
+	FTMX[(uint8_t) ftmn]->SC ^= FTM_SC_CPWMS_MASK;
 }
 
 extern "C" {
 __ISR void FTM0_Handler(void) {
-	ftm0_listener();
+	ftm0_listener(ftm0);
 }
 
 __ISR void FTM1_Handler(void) {
-	ftm1_listener();
+	ftm1_listener(ftm1);
 }
 
 __ISR void FTM2_Handler(void) {
-	ftm2_listener();
+	ftm2_listener(ftm2);
 }
 }
 
