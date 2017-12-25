@@ -17,8 +17,9 @@ public:
 		kUart0 = 0, kUart1, kUart2 = 2
 	};
 
-	Uart(Name uartn, uint32_t &baudrate);
-
+	Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void (*tx_empty_listener)(Uart*));
+	const uint8_t GetByte() const;
+	void SendByte(const uint8_t byte);
 
 private:
 	const Name uartn;

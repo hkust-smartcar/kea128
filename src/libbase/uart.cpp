@@ -12,7 +12,7 @@ namespace libbase {
 
 static UART_Type * const UARTX[] = UART_BASES;
 
-Uart::Uart(Name uartn, uint32_t &baudrate) :
+Uart::Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void (*tx_empty_listener)(Uart*)) :
 		uartn(uartn) {
 	SIM->SCGC |= 1 << (SIM_SCGC_UART0_SHIFT + (uint8_t) uartn);
 	switch (uartn) {
@@ -42,6 +42,18 @@ Uart::Uart(Name uartn, uint32_t &baudrate) :
 
 	UARTX[(uint8_t) uartn]->C2 |= (0 | UART_C2_TE_MASK | UART_C2_RE_MASK);
 	baudrate = (uart_input_clk >> 4) / sbr;
+}
+
+const uint8_t Uart::GetByte() const {
+	while (!(UARTX[(uint8_t) uartn]->S1 & UART_S1_RDRF_MASK))
+		;
+	return UARTX[(uint8_t) uartn]->D;
+}
+
+void Uart::SendByte(const uint8_t byte) {
+	while (!((UARTX[(uint8_t) uartn]->S1) & UART_S1_TDRE_MASK))
+		;
+	UARTX[(uint8_t) uartn]->D = byte;
 }
 
 }
