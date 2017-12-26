@@ -21,6 +21,7 @@ public:
   enum struct Name { kI2C0, kI2C1 };
 
   I2CMaster(Name, uint32_t baud);
+  ~I2CMaster() { Uninit(); };
   uint8_t ReadReg(uint8_t ID, uint8_t reg);
   void ReadRegs(uint8_t ID, uint8_t first_reg, uint8_t count, uint8_t* buf);
   void WriteReg(uint8_t ID, uint8_t reg, uint8_t val);
@@ -37,6 +38,7 @@ private:
   void SetTx(uint8_t byte) {i2cn->D = byte; RxWait();}
   void RxWait();
   void Delay() { volatile uint8_t n = 150; while (n--); };
+  void Uninit();
   static uint16_t SCLDivider[0x40];
 };
 

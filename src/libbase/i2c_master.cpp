@@ -105,4 +105,14 @@ void I2CMaster::WriteReg(uint8_t SlaveID, uint8_t reg, uint8_t val) {
   Delay();
 }
 
+void I2CMaster::Uninit() {
+  if (i2cn == I2C0) {
+    SIM->SCGC &= ~SIM_SCGC_I2C0_MASK;
+  } else {
+    SIM->SCGC &= ~SIM_SCGC_I2C1_MASK;
+  }
+
+  i2cn->C1 = 0x00;
+}
+
 }
