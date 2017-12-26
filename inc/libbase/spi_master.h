@@ -21,7 +21,7 @@ public:
 
   SPIMaster(Name, uint32_t baud);
   ~SPIMaster();
-  void Exchange(uint8_t*, uint8_t*);
+  void Exchange(uint8_t*, uint8_t*, uint32_t len);
 
 private:
   SPI_Type* spin;
