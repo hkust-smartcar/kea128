@@ -18,7 +18,7 @@ public:
 	};
 
 	Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void (*tx_empty_listener)(Uart*));
-	const uint8_t GetByte() const;
+	uint8_t GetByte() const;
 	void SendByte(const uint8_t byte);
 
 private:
