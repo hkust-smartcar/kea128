@@ -49,6 +49,9 @@ Ftm::Ftm(Name ftmn, EXT_CLK external_clk, void (*listener)(Ftm*)) :
 			ftm2 = this;
 			break;
 		}
+		if(listener) {
+			NVIC_EnableIRQ((IRQn_Type)((uint8_t)ftmn + FTM0_IRQn));
+		}
 		FTMX[(uint8_t)ftmn]->SC|=(FTM_SC_PS(0) | FTM_SC_CLKS(3) | ((listener) ? FTM_SC_TOIE_MASK : 0));
 		FTMX[(uint8_t)ftmn]->CNT=0;
 	}
@@ -131,14 +134,17 @@ void Ftm::TurnCount() {
 extern "C" {
 __ISR void FTM0_Handler(void) {
 	ftm0_listener(ftm0);
+	FTM0->SC ^= FTM_SC_TOF_MASK;
 }
 
 __ISR void FTM1_Handler(void) {
 	ftm1_listener(ftm1);
+	FTM1->SC ^= FTM_SC_TOF_MASK;
 }
 
 __ISR void FTM2_Handler(void) {
 	ftm2_listener(ftm2);
+	FTM2->SC ^= FTM_SC_TOF_MASK;
 }
 }
 
