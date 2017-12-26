@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include <cstddef>
 #include "libbase/cmsis/SKEAZ1284.h"
 
 namespace libbase {
@@ -20,7 +21,7 @@ public:
   enum struct Name { kSPI0, kSPI1 };
 
   SPIMaster(Name, uint32_t baud);
-  ~SPIMaster();
+  ~SPIMaster() { Uninit(); };
   void Exchange(uint8_t*, uint8_t*, size_t len);
 
 private:
@@ -28,6 +29,7 @@ private:
   uint32_t m_baud;
   void TxWait() { while( !( spin->S & SPI_S_SPTEF_MASK ) ); };
   void RxWait() { while( !( spin->S & SPI_S_SPRF_MASK ) ); };
+  void Uninit();
   static uint16_t scaler[9];
   static uint8_t prescaler[8];
 };
