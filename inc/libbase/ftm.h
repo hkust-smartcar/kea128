@@ -16,10 +16,21 @@ public:
 		kFTM0 = 0, kFTM1, kFTM2 = 2
 	};
 
+	/*
+	 * TCK1: E0
+	 * TCK2: E7
+	 */
 	enum struct EXT_CLK {
 		kTCK_1 = 0, kTCK_2, kDisable = 3
 	};
 	
+	/*
+	 * Only FTM2 can init output channel
+	 * FTM2 CH0: H0
+	 * FTM2 Ch1: H1
+	 * FTM2 CH2: D0
+	 * FTM2 CH3: D1
+	 */
 	enum struct CHANNEL {
 		kCh0 = 0, kCh1, kCh2, kCh3, kDisable = 4
 	};

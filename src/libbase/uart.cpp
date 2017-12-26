@@ -7,10 +7,22 @@
  */
 #include "libbase/uart.h"
 #include "libbase/cmsis/SKEAZ1284.h"
+#include "libbase/misc_utils_c.h"
 
 namespace libbase {
 
 static UART_Type * const UARTX[] = UART_BASES;
+
+Uart* uart0;
+Uart* uart1;
+Uart* uart2;
+
+void (*uart0_rx_full_listener)(Uart*);
+void (*uart0_tx_empty_listener)(Uart*);
+void (*uart1_rx_full_listener)(Uart*);
+void (*uart1_tx_empty_listener)(Uart*);
+void (*uart2_rx_full_listener)(Uart*);
+void (*uart2_tx_empty_listener)(Uart*);
 
 Uart::Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void (*tx_empty_listener)(Uart*)) :
 		uartn(uartn) {
@@ -18,12 +30,21 @@ Uart::Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void
 	switch (uartn) {
 	case Name::kUart0:
 		SIM->PINSEL |= SIM_PINSEL_UART0PS_MASK;
+		uart0_rx_full_listener = rx_full_listener;
+		uart0_tx_empty_listener = tx_empty_listener;
+		uart0 = this;
 		break;
 	case Name::kUart1:
 		SIM->PINSEL1 |= SIM_PINSEL1_UART1PS_MASK;
+		uart1_rx_full_listener = rx_full_listener;
+		uart1_tx_empty_listener = tx_empty_listener;
+		uart1 = this;
 		break;
 	case Name::kUart2:
 		SIM->PINSEL1 |= SIM_PINSEL1_UART2PS_MASK;
+		uart2_rx_full_listener = rx_full_listener;
+		uart2_tx_empty_listener = tx_empty_listener;
+		uart2 = this;
 		break;
 	}
 	UARTX[(uint8_t) uartn]->C2 &= ~(0 | UART_C2_TE_MASK | UART_C2_RE_MASK);
@@ -42,6 +63,16 @@ Uart::Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void
 
 	UARTX[(uint8_t) uartn]->C2 |= (0 | UART_C2_TE_MASK | UART_C2_RE_MASK);
 	baudrate = (uart_input_clk >> 4) / sbr;
+
+	if (rx_full_listener || tx_empty_listener) {
+		NVIC_EnableIRQ((IRQn_Type) ((uint8_t) uartn + UART0_IRQn));
+	}
+	if (rx_full_listener) {
+		UARTX[(uint8_t) uartn]->C2 |= UART_C2_RIE_MASK;
+	}
+	if (tx_empty_listener) {
+		UARTX[(uint8_t) uartn]->C2 |= UART_C2_TCIE_MASK;
+	}
 }
 
 uint8_t Uart::GetByte() const {
@@ -54,6 +85,18 @@ void Uart::SendByte(const uint8_t byte) {
 	while (!((UARTX[(uint8_t) uartn]->S1) & UART_S1_TDRE_MASK))
 		;
 	UARTX[(uint8_t) uartn]->D = byte;
+}
+
+extern "C" {
+__ISR void UART0_Handler(void) {
+
+}
+
+__ISR void UART1_Handler(void) {
+}
+
+__ISR void UART2_Handler(void) {
+}
 }
 
 }

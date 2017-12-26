@@ -11,6 +11,7 @@
 #include "libbase/cmsis/SKEAZ1284.h"
 #include "libbase/cmsis/system.h"
 #include "libbase/misc_utils_c.h"
+#include "libbase/cmsis/core_cmFunc.h"
 
 namespace libbase {
 
@@ -32,25 +33,40 @@ Ftm::Ftm(Name ftmn, EXT_CLK external_clk, void (*listener)(Ftm*)) :
 	opened_channel = 0;
 	freq_set = false;
 	SIM->SCGC |= 1 << (SIM_SCGC_FTM0_SHIFT + (uint8_t) ftmn);
-	if (external_clk != EXT_CLK::kDisable) {
-		SIM->PINSEL &= ~1 << (SIM_PINSEL_FTM0CLKPS_SHIFT + (uint8_t) external_clk * 2);
-		PORT->PUE1 |= (uint32_t)(1 << ((uint32_t)((external_clk == EXT_CLK::kDisable) ? Pin::Name::kPte0 : Pin::Name::kPte7) & 0x1f));	//pin pull up
-		switch (ftmn) {
+	switch (ftmn) {
 		case Name::kFTM0:
-			ftm0_listener = listener;
-			ftm0 = this;
-			break;
+		ftm0_listener = listener;
+		ftm0 = this;
+		break;
 		case Name::kFTM1:
-			ftm1_listener = listener;
-			ftm1 = this;
-			break;
+		ftm1_listener = listener;
+		ftm1 = this;
+		break;
 		case Name::kFTM2:
-			ftm2_listener = listener;
-			ftm2 = this;
-			break;
-		}
+		ftm2_listener = listener;
+		ftm2 = this;
+		break;
+	}
+	if(listener) {
+//		NVIC_SetPriority((IRQn_Type)((uint8_t)ftmn + FTM0_IRQn),0);
+		NVIC_EnableIRQ((IRQn_Type)((uint8_t)ftmn + FTM0_IRQn));
+	}
+	if (external_clk != EXT_CLK::kDisable) {
+		SIM->PINSEL &= ~(1 << (SIM_PINSEL_FTM0CLKPS_SHIFT + (uint8_t) external_clk * 2));
+		PORT->PUE1 |= (uint32_t)(1 << ((uint32_t)((external_clk == EXT_CLK::kDisable) ? Pin::Name::kPte0 : Pin::Name::kPte7) & 0x1f));	//pin pull up
 		FTMX[(uint8_t)ftmn]->SC|=(FTM_SC_PS(0) | FTM_SC_CLKS(3) | ((listener) ? FTM_SC_TOIE_MASK : 0));
 		FTMX[(uint8_t)ftmn]->CNT=0;
+		switch(ftmn) {
+		case Name::kFTM0:
+			SIM->PINSEL |= SIM_PINSEL_FTM0CLKPS(1+(uint8_t)external_clk);
+			break;
+		case Name::kFTM1:
+			SIM->PINSEL |= SIM_PINSEL_FTM1CLKPS(1+(uint8_t)external_clk);
+			break;
+		case Name::kFTM2:
+			SIM->PINSEL |= SIM_PINSEL_FTM2CLKPS(1+(uint8_t)external_clk);
+			break;
+		}
 	}
 }
 
@@ -129,16 +145,19 @@ void Ftm::TurnCount() {
 }
 
 extern "C" {
-__ISR void FTM0_Handler(void) {
+__ISR void FTM0_IRQHandler(void) {
 	ftm0_listener(ftm0);
+	FTM0->SC ^= FTM_SC_TOF_MASK;
 }
 
-__ISR void FTM1_Handler(void) {
+__ISR void FTM1_IRQHandler(void) {
 	ftm1_listener(ftm1);
+	FTM1->SC ^= FTM_SC_TOF_MASK;
 }
 
-__ISR void FTM2_Handler(void) {
+__ISR void FTM2_IRQHandler(void) {
 	ftm2_listener(ftm2);
+	FTM2->SC ^= FTM_SC_TOF_MASK;
 }
 }
 
