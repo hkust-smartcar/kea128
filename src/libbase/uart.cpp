@@ -75,7 +75,7 @@ Uart::Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void
 	}
 }
 
-const uint8_t Uart::GetByte() const {
+uint8_t Uart::GetByte() const {
 	while (!(UARTX[(uint8_t) uartn]->S1 & UART_S1_RDRF_MASK))
 		;
 	return UARTX[(uint8_t) uartn]->D;

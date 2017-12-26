@@ -13,8 +13,8 @@ namespace libbase {
 namespace {
 
 constexpr GPIO_Type* MEM_MAPS[3] { GPIOA, GPIOB, GPIOC };
-#define PTX(p) { (uint8_t)p >> 5 }
-#define PTn(p) { (uint8_t)p & 0x1f }
+#define PTX(p) (uint32_t)p >> 5
+#define PTn(p) (uint32_t)p & 0x1f
 
 }
 
