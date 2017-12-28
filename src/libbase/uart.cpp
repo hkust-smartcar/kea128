@@ -29,7 +29,7 @@ Uart::Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void
 	SIM->SCGC |= 1 << (SIM_SCGC_UART0_SHIFT + (uint8_t) uartn);
 	switch (uartn) {
 	case Name::kUart0:
-		SIM->PINSEL |= SIM_PINSEL_UART0PS_MASK;
+		SIM->PINSEL &= ~SIM_PINSEL_UART0PS_MASK;
 		uart0_rx_full_listener = rx_full_listener;
 		uart0_tx_empty_listener = tx_empty_listener;
 		uart0 = this;
