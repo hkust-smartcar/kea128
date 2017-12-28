@@ -88,14 +88,43 @@ void Uart::SendByte(const uint8_t byte) {
 }
 
 extern "C" {
-__ISR void UART0_Handler(void) {
-
+__ISR void UART0_IRQHandler(void) {
+	NVIC_DisableIRQ(UART0_IRQn);
+	if ((UART0->S1 & UART_S1_TC_MASK) && uart0_tx_empty_listener) {
+		uart0_tx_empty_listener(uart0);
+		UART0->C2 |= UART_C2_SBK_MASK;
+	}
+	if ((UART0->S1 & UART_S1_RDRF_MASK) && uart0_rx_full_listener) {
+		uart0_rx_full_listener(uart0);
+		UART0->D;
+	}
+	NVIC_EnableIRQ(UART0_IRQn);
 }
 
-__ISR void UART1_Handler(void) {
+__ISR void UART1_IRQHandler(void) {
+	NVIC_DisableIRQ(UART1_IRQn);
+	if ((UART1->S1 & UART_S1_TC_MASK) && uart1_tx_empty_listener) {
+		uart1_tx_empty_listener(uart1);
+		UART1->C2 |= UART_C2_SBK_MASK;
+	}
+	if ((UART1->S1 & UART_S1_RDRF_MASK) && uart1_rx_full_listener) {
+		uart1_rx_full_listener(uart1);
+		UART1->D;
+	}
+	NVIC_EnableIRQ(UART1_IRQn);
 }
 
-__ISR void UART2_Handler(void) {
+__ISR void UART2_IRQHandler(void) {
+	NVIC_DisableIRQ(UART2_IRQn);
+	if ((UART2->S1 & UART_S1_TC_MASK) && uart2_tx_empty_listener) {
+		uart2_tx_empty_listener(uart2);
+		UART2->C2 |= UART_C2_SBK_MASK;
+	}
+	if ((UART2->S1 & UART_S1_RDRF_MASK) && uart2_rx_full_listener) {
+		uart2_rx_full_listener(uart2);
+		UART2->D;
+	}
+	NVIC_EnableIRQ(UART2_IRQn);
 }
 }
 
