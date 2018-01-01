@@ -10,6 +10,8 @@
 
 namespace libbase {
 
+#define SECTOR_SIZE 512
+
 // flash commands
 #define ERASE_VERITF_ALL_BLOCKS             0x01  // 擦除检验所有区块
 #define ERASE_VERITF_BLOCKS                 0x02  // 擦除检验数据块
@@ -75,6 +77,19 @@ bool Flash::FlashCmdStart() {
 	if (FTMRE->FSTAT & (FTMRE_FSTAT_ACCERR_MASK | FTMRE_FSTAT_FPVIOL_MASK | FTMRE_FSTAT_MGSTAT_MASK))
 		return false;
 	return true;
+}
+
+uint8_t* Flash::Read(uint32_t sectorNum, uint32_t offset, uint16_t buffNeeded) {
+	uint32_t temp;
+	uint8_t* tempBuff = new uint8_t[buffNeeded];
+	for (uint16_t i = 0; i < buffNeeded; i += 4) {
+		temp = (uint32_t)(sectorNum * SECTOR_SIZE + offset + i);
+		tempBuff[i] = (uint8_t)(temp >> 24);
+		tempBuff[i + 1] = (uint8_t)(temp >> 16);
+		tempBuff[i + 2] = (uint8_t)(temp >> 8);
+		tempBuff[i + 3] = (uint8_t)(temp);
+	}
+	return tempBuff;
 }
 
 }
