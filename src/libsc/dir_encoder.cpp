@@ -10,13 +10,13 @@
 
 namespace libsc {
 
+int32_t DirEncoder::count0 = 0;
+int32_t DirEncoder::count1 = 0;
+bool DirEncoder::dir0 = true;
+bool DirEncoder::dir1 = true;
+
 DirEncoder::DirEncoder(uint8_t id) :
 		counter(id ? libbase::Ftm::Name::kFTM0 : libbase::Ftm::Name::kFTM1, id ? libbase::Ftm::EXT_CLK::kTCK_2 : libbase::Ftm::EXT_CLK::kTCK_1, overFlowListener), dir(id ? libbase::Kbi::Name::kKbi1 : libbase::Kbi::Name::kKbi0, libbase::Kbi::Interrupt::kBoth, dirChangeListener) {
-	if (id) {
-		count1 = 0;
-	} else {
-		count0 = 0;
-	}
 }
 
 void DirEncoder::overFlowListener(libbase::Ftm* ftm) {
