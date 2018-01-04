@@ -1,5 +1,5 @@
 /*
- * flash.h
+ * flash.h (Not working)
  *
  * Author: Leslie Lee (LeeChunHei)
  * Copyright (c) 2014-2017 HKUST SmartCar Team
@@ -28,12 +28,11 @@ public:
 	 */
 	bool Write(uint32_t sectorNum, uint32_t offset, uint8_t* buff, size_t sizeOfBuff);
 	uint8_t* Read(uint32_t sectorNum, uint32_t offset, uint16_t buffNeeded);
-private:
-	volatile uint8_t s_flash_command_run[14] = { 0x00, 0xB5, 0x80, 0x21, 0x01, 0x70, 0x01, 0x78, 0x09, 0x06, 0xFC, 0xD5, 0x00, 0xBD };
-	typedef void (*flash_run_entry_t)(volatile uint8_t *reg);
-	flash_run_entry_t s_flash_run_entry;
 	
+
+private:
 	bool FlashCmdStart();
+	bool EraseSector(uint32_t sectorNum);
 };
 
 }

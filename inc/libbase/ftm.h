@@ -44,6 +44,9 @@ public:
 	uint16_t GetCount();
 	void CleanCount();
 	void TurnCount();
+	Name GetName() const {
+		return ftmn;
+	}
 	
 private:
 	const Name ftmn;
