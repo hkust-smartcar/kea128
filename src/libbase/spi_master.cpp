@@ -6,6 +6,7 @@
  * Refer to LICENSE for details
  */
 
+#include <assert.h>
 #include "libbase/spi_master.h"
 #include "libbase/math.h"
 
@@ -48,6 +49,8 @@ SPIMaster::SPIMaster(Name n, uint32_t baud) {
   spin->BR = SPI_BR_SPR(spr) | SPI_BR_SPPR(sppr);
 
   m_baud = (bus_clk_khz*1000/prescaler[sppr]/scaler[spr]);
+
+  assert( m_baud <= bus_clk_khz * 500 ); // baud must be less than bus clock rate / 2
 }
 
 void SPIMaster::Exchange(uint8_t* out, uint8_t *in, size_t len) {

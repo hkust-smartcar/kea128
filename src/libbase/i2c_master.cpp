@@ -5,6 +5,7 @@
  * Copyright (c) 2014-2017 HKUST SmartCar Team
  * Refer to LICENSE for details
  */
+#include <assert.h>
 #include "libbase/math.h"
 #include "assert.h"
 #include "libbase/i2c_master.h"
@@ -51,6 +52,8 @@ I2CMaster::I2CMaster(Name n, uint32_t baud) {
   i2cn->F = I2C_F_MULT(mul) | I2C_F_ICR(min_diff_id);
   i2cn->C1 = I2C_C1_IICEN_MASK;
   m_baud = bus_clk_khz * 1000 / ( (1<<mul) * SCLDivider[min_diff_id]);
+
+  assert( m_baud <= 100000 ); // baud must be less than 100k
 }
 
 void I2CMaster::RxWait() {

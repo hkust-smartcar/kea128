@@ -18,8 +18,7 @@ MPU6050::MPU6050(I2CMaster::Name n) {
 
   m_i2c->WriteReg(reg, Registers::PWR_MGMT_1, 0x00); // awake
   m_i2c->WriteReg(reg, Registers::SMPLRT_DIV, 0x07); // 125Hz sampling rate
-  volatile int a = m_i2c->ReadReg(reg, Registers::SMPLRT_DIV);
-
+//  volatile int a = m_i2c->ReadReg(reg, Registers::SMPLRT_DIV);
   m_i2c->WriteReg(reg, Registers::CONFIG, 0x04);
   m_i2c->WriteReg(reg, Registers::GYRO_CONFIG, 0x18); // Full scale range +- 2000deg /s
   m_i2c->WriteReg(reg, Registers::ACCEL_CONFIG, 0x10); // Full scale range +- 8g
