@@ -17,8 +17,8 @@ Gpi::Gpi(Pin::Name p) : m_pin(S9keaz128::GetGpio(p)){
 
   assert(m_pin != Gpio::Name::kDisabled);
 
-  ptx = PTX(p);
-  ptn = PTn(p);
+  ptx = Pin::getPTX(p);
+  ptn = Pin::getPTN(p);
 
   RESET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
   RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
@@ -27,8 +27,8 @@ Gpi::Gpi(Pin::Name p) : m_pin(S9keaz128::GetGpio(p)){
 
 Gpi::Gpi(Gpio::Name p) : m_pin(p){
 
-  ptx = PTX(p);
-  ptn = PTn(p);
+  ptx = Pin::getPTX((Pin::Name)p);
+  ptn = Pin::getPTN((Pin::Name)p);
 
   RESET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
   RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
@@ -53,8 +53,8 @@ Gpo::Gpo(Pin::Name p, bool init) : m_pin(S9keaz128::GetGpio(p)){
 
   assert(m_pin != Gpio::Name::kDisabled);
 
-  ptx = PTX(p);
-  ptn = PTn(p);
+  ptx = Pin::getPTX(p);
+  ptn = Pin::getPTN(p);
 
   SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
   SET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
@@ -64,8 +64,8 @@ Gpo::Gpo(Pin::Name p, bool init) : m_pin(S9keaz128::GetGpio(p)){
 }
 
 Gpo::Gpo(Gpio::Name p, bool init) : m_pin(p){
-  ptx = PTX(p);
-  ptn = PTn(p);
+  ptx = Pin::getPTX((Pin::Name)p);
+  ptn = Pin::getPTN((Pin::Name)p);
 
   SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
   SET_BIT(MEM_MAPS[ptx]->PDDR, ptn);

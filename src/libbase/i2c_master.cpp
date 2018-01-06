@@ -46,6 +46,8 @@ I2CMaster::I2CMaster(Name n, uint32_t baud) {
       min_diff = diff;
     }
   }
+  mul = 2;
+  min_diff_id = 20;
   i2cn->F = I2C_F_MULT(mul) | I2C_F_ICR(min_diff_id);
   i2cn->C1 = I2C_C1_IICEN_MASK;
   m_baud = bus_clk_khz * 1000 / ( (1<<mul) * SCLDivider[min_diff_id]);
@@ -57,6 +59,7 @@ void I2CMaster::RxWait() {
     num++;
     assert (num <= 500); // Time out
   }
+  i2cn->S1 |= I2C_S_IICIF_MASK ;
 }
 
 uint8_t I2CMaster::ReadReg(uint8_t SlaveID, uint8_t reg) {
@@ -106,13 +109,13 @@ void I2CMaster::WriteReg(uint8_t SlaveID, uint8_t reg, uint8_t val) {
 }
 
 void I2CMaster::Uninit() {
-  if (i2cn == I2C0) {
-    SIM->SCGC &= ~SIM_SCGC_I2C0_MASK;
-  } else {
-    SIM->SCGC &= ~SIM_SCGC_I2C1_MASK;
-  }
-
-  i2cn->C1 = 0x00;
+//  if (i2cn == I2C0) {
+//    SIM->SCGC &= ~SIM_SCGC_I2C0_MASK;
+//  } else {
+//    SIM->SCGC &= ~SIM_SCGC_I2C1_MASK;
+//  }
+//
+//  i2cn->C1 = 0x00;
 }
 
 }

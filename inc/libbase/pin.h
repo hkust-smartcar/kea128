@@ -96,6 +96,11 @@ enum class Name : uint8_t {
     kDisabled = 71
 };
 
+inline uint8_t getPTX(Pin::Name p) { return (uint32_t)p >> 5; }
+inline uint8_t getPTN(Pin::Name p) { return (uint32_t)p & 0x1f; }
+
+void PullEnable(Pin::Name, bool enable);
+
 } // namespace Pin
 
 } // namespace libbase

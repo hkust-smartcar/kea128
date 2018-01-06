@@ -47,9 +47,9 @@ public:
   Triplet_i16 GetAcc();
 
 
-
+  I2CMaster* m_i2c;
 private:
   static uint8_t reg;
-  I2CMaster* m_i2c;
+
 };
 }
