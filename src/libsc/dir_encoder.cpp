@@ -33,6 +33,7 @@ void DirEncoder::overFlowListener(libbase::Ftm* ftm) {
 			count1 -= ftm->GetCount();
 		}
 	}
+	ftm->CleanCount();
 }
 
 void DirEncoder::dirChangeListener(libbase::Kbi* kbi) {

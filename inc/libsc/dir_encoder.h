@@ -29,6 +29,8 @@ private:
 	static int32_t count1;
 	static bool dir0;
 	static bool dir1;
+	int32_t count;
+	bool direction;
 
 	libbase::Ftm counter;
 	libbase::Kbi dir;
