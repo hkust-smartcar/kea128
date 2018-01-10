@@ -8,5 +8,8 @@
 #pragma once
 #include <cstdint>
 namespace libbase {
-uint32_t abs(uint32_t);
+/**
+ * Get absolute value
+ */
+uint32_t abs(int32_t);
 }

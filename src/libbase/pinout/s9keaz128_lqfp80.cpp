@@ -21,6 +21,8 @@ Gpio::Name GetGpio(const Pin::Name pin) {
       || (Pin::Name::kPtg0 <= pin && pin <= Pin::Name::kPtg3)
       || (Pin::Name::kPth5 <= pin && pin <= Pin::Name::kPth7)
       || (Pin::Name::kPti3 <= pin && pin <= Pin::Name::kPti6)
+      || (Pin::Name::kPta3 == pin)
+      || (Pin::Name::kPth4 == pin)
       )
     return (Gpio::Name)pin;
   else return Gpio::Name::kDisabled;

@@ -51,7 +51,7 @@ void Gpi::Uninit() {
 
 Gpo::Gpo(Pin::Name p, bool init) : m_pin(S9keaz128::GetGpio(p)){
 
-  assert(m_pin != Gpio::Name::kDisabled);
+//  assert(m_pin != Gpio::Name::kDisabled);
 
   ptx = Pin::getPTX(p);
   ptn = Pin::getPTN(p);

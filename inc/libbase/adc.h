@@ -39,6 +39,10 @@ public:
 
   Adc(Pin::Name, Bit = Bit::k12);
   ~Adc();
+
+  /**
+   * Get result in range [0, 65535]
+   */
   uint16_t FetchOnce();
 
   /**

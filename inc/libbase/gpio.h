@@ -66,8 +66,17 @@ public:
   Gpi(Pin::Name);
   Gpi(Gpio::Name);
   ~Gpi() { Uninit(); };
+
+  /**
+   * Get GPI signal
+   */
   bool Get() const;
+
+  /**
+   * Convert to GPO
+   */
   Gpo ToGpo(bool init);
+
   Gpio::Name GetPin() const { return m_pin; }
 
 private:
@@ -83,9 +92,22 @@ public:
   Gpo(Pin::Name, bool init);
   Gpo(Gpio::Name, bool init);
   ~Gpo() { Uninit(); };
+
+  /**
+   * Set GPO signal output
+   */
   void Set(bool is_high);
+
+  /**
+   * Toggle GPO signal
+   */
   void Turn();
+
+  /**
+   * Convert to GPI
+   */
   Gpi ToGpi();
+
   Gpio::Name GetPin() { return m_pin; };
 
 private:

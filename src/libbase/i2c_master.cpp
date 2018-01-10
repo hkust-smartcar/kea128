@@ -47,13 +47,11 @@ I2CMaster::I2CMaster(Name n, uint32_t baud) {
       min_diff = diff;
     }
   }
-  mul = 2;
-  min_diff_id = 20;
   i2cn->F = I2C_F_MULT(mul) | I2C_F_ICR(min_diff_id);
-  i2cn->C1 = I2C_C1_IICEN_MASK;
+  i2cn->C1 = I2C_C1_IICEN_MASK|I2C_C1_TXAK_MASK;
   m_baud = bus_clk_khz * 1000 / ( (1<<mul) * SCLDivider[min_diff_id]);
 
-  assert( m_baud <= 100000 ); // baud must be less than 100k
+//  assert( m_baud <= 100000 ); // baud must be less than 100k
 }
 
 void I2CMaster::RxWait() {
@@ -67,15 +65,20 @@ void I2CMaster::RxWait() {
 
 uint8_t I2CMaster::ReadReg(uint8_t SlaveID, uint8_t reg) {
   SendStart();
-  SetTx((SlaveID << 1) | 0x00);
-  SetTx(reg);
-  RepeatStart();
+//  SetTx((SlaveID << 1) | 0x00);
+//  SetTx(reg);
+//  RepeatStart();
   SetTx((SlaveID << 1) | 0x01);
-  RxNACK();
+
+  RxACK();
   uint8_t result = i2cn->D; // initiate read
   RxWait();
+
+  RxNACK();
+  result = i2cn->D; // initiate read
+  RxWait();
   SendStop();
-  result = i2cn->D; // actual read
+//  result = i2cn->D; // actual read
   Delay(); // mandatory delay
   return result;
 }

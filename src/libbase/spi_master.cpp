@@ -53,7 +53,7 @@ SPIMaster::SPIMaster(Name n, uint32_t baud) {
   assert( m_baud <= bus_clk_khz * 500 ); // baud must be less than bus clock rate / 2
 }
 
-void SPIMaster::Exchange(uint8_t* out, uint8_t *in, size_t len) {
+void SPIMaster::Exchange(size_t len, uint8_t* out, uint8_t *in) {
   while(len) {
       TxWait();
       spin->D = *out; out++;

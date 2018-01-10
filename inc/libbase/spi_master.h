@@ -22,7 +22,14 @@ public:
 
   SPIMaster(Name, uint32_t baud);
   ~SPIMaster() { Uninit(); };
-  void Exchange(uint8_t*, uint8_t*, size_t len);
+
+  /**
+   * Exchange bytes
+   * @param len Number of bytes to exchange
+   * @param out Array of bytes sending out
+   * @param in Array to receive byte sending in
+   */
+  void Exchange(size_t len, uint8_t* out, uint8_t* in = nullptr);
 
 private:
   SPI_Type* spin;

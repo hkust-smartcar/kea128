@@ -99,7 +99,10 @@ enum class Name : uint8_t {
 inline uint8_t getPTX(Pin::Name p) { return (uint32_t)p >> 5; }
 inline uint8_t getPTN(Pin::Name p) { return (uint32_t)p & 0x1f; }
 
-void PullEnable(Pin::Name, bool enable);
+/**
+ * Enable/disable pullup of a pin
+ */
+void PullEnable(Pin::Name, bool enable = true);
 
 } // namespace Pin
 
