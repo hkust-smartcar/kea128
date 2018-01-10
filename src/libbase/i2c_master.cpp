@@ -51,7 +51,7 @@ I2CMaster::I2CMaster(Name n, uint32_t baud) {
   i2cn->C1 = I2C_C1_IICEN_MASK|I2C_C1_TXAK_MASK;
   m_baud = bus_clk_khz * 1000 / ( (1<<mul) * SCLDivider[min_diff_id]);
 
-//  assert( m_baud <= 100000 ); // baud must be less than 100k
+  assert( m_baud <= 100000 ); // baud must be less than 100k
 }
 
 void I2CMaster::RxWait() {
@@ -65,9 +65,9 @@ void I2CMaster::RxWait() {
 
 uint8_t I2CMaster::ReadReg(uint8_t SlaveID, uint8_t reg) {
   SendStart();
-//  SetTx((SlaveID << 1) | 0x00);
-//  SetTx(reg);
-//  RepeatStart();
+  SetTx((SlaveID << 1) | 0x00);
+  SetTx(reg);
+  RepeatStart();
   SetTx((SlaveID << 1) | 0x01);
 
   RxACK();
@@ -78,7 +78,7 @@ uint8_t I2CMaster::ReadReg(uint8_t SlaveID, uint8_t reg) {
   result = i2cn->D; // initiate read
   RxWait();
   SendStop();
-//  result = i2cn->D; // actual read
+  result = i2cn->D; // actual read
   Delay(); // mandatory delay
   return result;
 }
@@ -115,13 +115,13 @@ void I2CMaster::WriteReg(uint8_t SlaveID, uint8_t reg, uint8_t val) {
 }
 
 void I2CMaster::Uninit() {
-//  if (i2cn == I2C0) {
-//    SIM->SCGC &= ~SIM_SCGC_I2C0_MASK;
-//  } else {
-//    SIM->SCGC &= ~SIM_SCGC_I2C1_MASK;
-//  }
-//
-//  i2cn->C1 = 0x00;
+  if (i2cn == I2C0) {
+    SIM->SCGC &= ~SIM_SCGC_I2C0_MASK;
+  } else {
+    SIM->SCGC &= ~SIM_SCGC_I2C1_MASK;
+  }
+
+  i2cn->C1 = 0x00;
 }
 
 }
