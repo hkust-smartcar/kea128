@@ -13,7 +13,7 @@
 
 namespace libbase {
 
-KBI_Type * KBIX[2] = KBI_BASES;
+volatile KBI_Type * KBIX[2] = { KBI0, KBI1 };
 
 Kbi* kbi0;
 Kbi* kbi1;
@@ -23,12 +23,13 @@ void (*kbi1_listener)(Kbi*);
 
 Kbi::Kbi(Name name, Interrupt interrupt, void (*listener)(Kbi*)) {
 	interrupt_set = interrupt;
+	kbin = name;
 	if (interrupt == Interrupt::kBoth)
 		interrupt = Interrupt::kFalling;
 
-	SIM->SCGC |= 1 << (uint32_t)(SIM_SCGC_KBI0_MASK + (uint8_t) name);
+	SIM->SCGC |= (uint32_t)(1 << (SIM_SCGC_KBI0_SHIFT + (uint8_t) name));
 
-	KBIX[(uint8_t) name]->SC &= ~(uint32_t) KBI_SC_KBIE_MASK;
+	KBIX[(uint8_t) name]->SC &= ~KBI_SC_KBIE_MASK;
 
 	if ((interrupt == Interrupt::kFalling) || (interrupt == Interrupt::kFallingLow))
 		KBIX[(uint8_t) name]->ES &= ~((uint32_t)(1 << (((uint8_t) name) ? 26 : 21)));
@@ -61,6 +62,7 @@ Kbi::Kbi(Name name, Interrupt interrupt, void (*listener)(Kbi*)) {
 
 extern "C" {
 __ISR void KBI0_IRQHandler(void) {
+	KBI0->SC |= KBI_SC_KBACK_MASK;
 	kbi0_listener(kbi0);
 	if (kbi0->GetInterrupt() == libbase::Kbi::Interrupt::kBoth) {
 		KBI0->ES ^= ((uint32_t)(1 << 21));
@@ -68,6 +70,7 @@ __ISR void KBI0_IRQHandler(void) {
 }
 
 __ISR void KBI1_IRQHandler(void) {
+	KBI1->SC |= KBI_SC_KBACK_MASK;
 	kbi1_listener(kbi1);
 	if (kbi1->GetInterrupt() == libbase::Kbi::Interrupt::kBoth) {
 		KBI1->ES ^= ((uint32_t)(1 << 26));
