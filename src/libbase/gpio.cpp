@@ -5,6 +5,7 @@
  * Copyright (c) 2014-2017 HKUST SmartCar Team
  * Refer to LICENSE for details
  */
+#include <utility>
 #include "assert.h"
 #include "libbase/gpio.h"
 #include "libbase/pinout/s9keaz128_lqfp80.h"
@@ -40,13 +41,13 @@ bool Gpi::Get() const {
   return ((MEM_MAPS[ptx]->PDIR) >> ptn) & 0x1;
 }
 
-Gpo Gpi::ToGpo(bool init) {
-  return Gpo(m_pin, init);
+Gpo&& Gpi::ToGpo(bool init) {
+  return std::move(Gpo(m_pin, init));
 }
 
 void Gpi::Uninit() {
-  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
-  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
+//  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+//  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
 }
 
 Gpo::Gpo(Pin::Name p, bool init) : m_pin(S9keaz128::GetGpio(p)){
@@ -82,16 +83,16 @@ void Gpo::Set(bool is_high) {
 }
 
 void Gpo::Uninit() {
-  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
-  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
+//  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+//  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
 }
 
 void Gpo::Turn() {
   SET_BIT(MEM_MAPS[ptx]->PTOR, ptn);
 }
 
-Gpi Gpo::ToGpi() {
-  return Gpi(m_pin);
+Gpi&& Gpo::ToGpi() {
+  return std::move(Gpi(m_pin));
 }
 
 

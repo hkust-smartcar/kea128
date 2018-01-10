@@ -75,7 +75,7 @@ public:
   /**
    * Convert to GPO
    */
-  Gpo ToGpo(bool init);
+  Gpo&& ToGpo(bool init);
 
   Gpio::Name GetPin() const { return m_pin; }
 
@@ -106,7 +106,7 @@ public:
   /**
    * Convert to GPI
    */
-  Gpi ToGpi();
+  Gpi&& ToGpi();
 
   Gpio::Name GetPin() { return m_pin; };
 

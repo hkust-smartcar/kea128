@@ -103,7 +103,7 @@ uint8_t SoftI2CMaster::ReadByte(bool needACK) {
       if(m_sda_i.Get()) c+=1;
   }
 //  SDA_out();
-  m_sda = m_sda_i.ToGpo(false);
+  m_sda = Gpo(m_sda_i.GetPin(), false);
   SCL0();
   Delay();
   SendACK(needACK);
