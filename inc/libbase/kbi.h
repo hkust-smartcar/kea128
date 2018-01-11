@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include <functional>
 
 namespace libbase {
 
@@ -24,10 +25,16 @@ public:
 		kRising, kFalling, kBoth, kFallingLow, kRisingHigh
 	};
 
-	Kbi(Name name, Interrupt interrupt, void (*listener)(Kbi*));
-	Name GetName() const {
-		return kbin;
+	Kbi(Name name, Interrupt interrupt, std::function<void(Kbi*)> listener);
+
+	bool GetState() const {
+		return state;
 	}
+
+	void SetState(bool set) {
+		state = set;
+	}
+
 	Interrupt GetInterrupt() const {
 		return interrupt_set;
 	}
@@ -35,6 +42,7 @@ public:
 private:
 	Kbi::Name kbin;
 	Interrupt interrupt_set;
+	bool state;
 };
 
 }

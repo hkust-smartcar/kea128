@@ -19,15 +19,19 @@ static FTM_Type * const FTMX[] = FTM_BASES;
 
 #define PRECISON 1000u
 
-void (*ftm0_listener)(Ftm *ftm);
-void (*ftm1_listener)(Ftm *ftm);
-void (*ftm2_listener)(Ftm *ftm);
+//void (*ftm0_listener)(Ftm *ftm);
+//void (*ftm1_listener)(Ftm *ftm);
+//void (*ftm2_listener)(Ftm *ftm);
+
+std::function<void(Ftm*)> ftm0_listener;
+std::function<void(Ftm*)> ftm1_listener;
+std::function<void(Ftm*)> ftm2_listener;
 
 Ftm *ftm0;
 Ftm *ftm1;
 Ftm *ftm2;
 
-Ftm::Ftm(Name ftmn, EXT_CLK external_clk, void (*listener)(Ftm*)) :
+Ftm::Ftm(Name ftmn, EXT_CLK external_clk, std::function<void(Ftm*)> listener) :
 		ftmn(ftmn), external_clk(external_clk) {
 	period = 0;
 	opened_channel = 0;
