@@ -16,7 +16,7 @@ Pit::Pit(Name n, uint32_t cnt, void (*listener)(Pit*) ) {
   PIT->CHANNEL[chn].LDVAL  = cnt;
   ClrFlag(n);
   PIT->CHANNEL[chn].TCTRL &= ~ PIT_TCTRL_TEN_MASK;
-  PIT->CHANNEL[chn].TCTRL  = (PIT_TCTRL_TIE_MASK);
+  PIT->CHANNEL[chn].TCTRL  = (PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK);
 
   switch(n) {
   case Name::kPit0:
@@ -34,10 +34,12 @@ Pit::Pit(Name n, uint32_t cnt, void (*listener)(Pit*) ) {
 
 extern "C" {
 __ISR void PIT_CH0_IRQHandler(void) {
+  PIT->CHANNEL[0].TFLG |= PIT_TFLG_TIF_MASK;
   pit0_listener(pit0);
 }
 
 __ISR void PIT_CH1_IRQHandler(void) {
+  PIT->CHANNEL[1].TFLG |= PIT_TFLG_TIF_MASK;
   pit1_listener(pit1);
 }
 
