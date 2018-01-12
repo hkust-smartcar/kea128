@@ -18,10 +18,10 @@ volatile KBI_Type * KBIX[2] = { KBI0, KBI1 };
 Kbi* kbi0;
 Kbi* kbi1;
 
-void (*kbi0_listener)(Kbi*);
-void (*kbi1_listener)(Kbi*);
+std::function<void(Kbi*)> kbi0_listener;
+std::function<void(Kbi*)> kbi1_listener;
 
-Kbi::Kbi(Name name, Interrupt interrupt, void (*listener)(Kbi*)) {
+Kbi::Kbi(Name name, Interrupt interrupt, std::function<void(Kbi*)> listener) {
 	interrupt_set = interrupt;
 	kbin = name;
 	if (interrupt == Interrupt::kBoth)
@@ -63,6 +63,7 @@ Kbi::Kbi(Name name, Interrupt interrupt, void (*listener)(Kbi*)) {
 extern "C" {
 __ISR void KBI0_IRQHandler(void) {
 	KBI0->SC |= KBI_SC_KBACK_MASK;
+	kbi0->SetState((bool) (KBI0->ES & ((uint32_t)(1 << 21))));
 	kbi0_listener(kbi0);
 	if (kbi0->GetInterrupt() == libbase::Kbi::Interrupt::kBoth) {
 		KBI0->ES ^= ((uint32_t)(1 << 21));
@@ -71,6 +72,7 @@ __ISR void KBI0_IRQHandler(void) {
 
 __ISR void KBI1_IRQHandler(void) {
 	KBI1->SC |= KBI_SC_KBACK_MASK;
+	kbi1->SetState((bool) (KBI1->ES & ((uint32_t)(1 << 26))));
 	kbi1_listener(kbi1);
 	if (kbi1->GetInterrupt() == libbase::Kbi::Interrupt::kBoth) {
 		KBI1->ES ^= ((uint32_t)(1 << 26));

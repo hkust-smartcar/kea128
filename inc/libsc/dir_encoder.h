@@ -23,12 +23,6 @@ public:
 	int32_t GetCount();
 
 private:
-	static void overFlowListener(libbase::Ftm* ftm);
-	static void dirChangeListener(libbase::Kbi* kbi);
-	static int32_t count0;
-	static int32_t count1;
-	static bool dir0;
-	static bool dir1;
 	int32_t count;
 	bool direction;
 
