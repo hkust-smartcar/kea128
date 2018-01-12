@@ -10,11 +10,11 @@
 #include "libbase/sys_tick.h"
 
 namespace libsc {
-uint8_t MPU6050::reg = 0x68;
+uint8_t Mpu6050::reg = 0x68;
 
-MPU6050::MPU6050(libbase::Pin::Name sda, libbase::Pin::Name scl) {
+Mpu6050::Mpu6050(libbase::Pin::Name sda, libbase::Pin::Name scl) {
 //  m_i2c = new I2CMaster(n, 85000);
-  m_i2c = new SoftI2CMaster(sda, scl);
+  m_i2c = new SoftI2cMaster(sda, scl);
 
   m_i2c->WriteReg(reg, Registers::PWR_MGMT_1, 0x00);
 //  m_i2c->WriteReg(reg, Registers::PWR_MGMT_1, 0x00); // awake
@@ -29,28 +29,28 @@ MPU6050::MPU6050(libbase::Pin::Name sda, libbase::Pin::Name scl) {
   libbase::Systick::DelayMs(50);
 }
 
-MPU6050::~MPU6050() {
+Mpu6050::~Mpu6050() {
   delete m_i2c;
 }
 
-MPU6050::Triplet_i16 MPU6050::GetAcc() {
+Mpu6050::Triplet_i16 Mpu6050::GetAcc() {
   uint8_t temp[6];
 
   m_i2c->ReadRegs(reg, Registers::ACCEL_XOUT_H, 6, temp);
 
-  MPU6050::Triplet_i16 t;
+  Mpu6050::Triplet_i16 t;
   t.x = (int16_t)( ( (uint16_t)temp[0]<<8 | temp[1] ) )>>2;
   t.y = (int16_t)( ( (uint16_t)temp[2]<<8 | temp[3] ) )>>2;
   t.z = (int16_t)( ( (uint16_t)temp[4]<<8 | temp[5] ) )>>2;
   return t;
 }
 
-MPU6050::Triplet_i16 MPU6050::GetGyro() {
+Mpu6050::Triplet_i16 Mpu6050::GetGyro() {
   uint8_t temp[6];
 
   m_i2c->ReadRegs(reg, Registers::GYRO_XOUT_H, 6, temp);
 
-  MPU6050::Triplet_i16 t;
+  Mpu6050::Triplet_i16 t;
   t.x = (int16_t)( ( (uint16_t)temp[0]<<8 | temp[1] ) )>>2;
   t.y = (int16_t)( ( (uint16_t)temp[2]<<8 | temp[3] ) )>>2;
   t.z = (int16_t)( ( (uint16_t)temp[4]<<8 | temp[5] ) )>>2;

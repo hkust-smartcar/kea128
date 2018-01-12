@@ -12,10 +12,10 @@
 
 namespace libbase {
 
-uint8_t SPIMaster::prescaler[] = {1,2,3,4,5,6,7,8};
-uint16_t SPIMaster::scaler[] = {2,4,8,16,32,64,128,256,512};
+uint8_t SpiMaster::prescaler[] = {1,2,3,4,5,6,7,8};
+uint16_t SpiMaster::scaler[] = {2,4,8,16,32,64,128,256,512};
 
-SPIMaster::SPIMaster(Name n, uint32_t baud) {
+SpiMaster::SpiMaster(Name n, uint32_t baud) {
   if(n == Name::kSPI0) {
       SIM->SCGC |= SIM_SCGC_SPI0_MASK;
       SIM->PINSEL &= ~(uint32_t)SIM_PINSEL_SPI0PS_MASK;
@@ -53,7 +53,7 @@ SPIMaster::SPIMaster(Name n, uint32_t baud) {
   assert( m_baud <= bus_clk_khz * 500 ); // baud must be less than bus clock rate / 2
 }
 
-void SPIMaster::Exchange(size_t len, uint8_t* out, uint8_t *in) {
+void SpiMaster::Exchange(size_t len, uint8_t* out, uint8_t *in) {
   while(len) {
       TxWait();
       spin->D = *out; out++;
@@ -64,7 +64,7 @@ void SPIMaster::Exchange(size_t len, uint8_t* out, uint8_t *in) {
   }
 }
 
-void SPIMaster::Uninit() {
+void SpiMaster::Uninit() {
   if(spin == SPI0) {
       SIM->SCGC &= ~SIM_SCGC_SPI0_MASK;
   } else {

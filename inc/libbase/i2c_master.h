@@ -12,7 +12,7 @@
 
 namespace libbase {
 
-class I2CMaster {
+class I2cMaster {
 public:
   /**
    * I2C0_SDA: A2; I2C0_SCL: A3
@@ -20,8 +20,8 @@ public:
    */
   enum struct Name { kI2C0, kI2C1 };
 
-  I2CMaster(Name, uint32_t baud);
-  ~I2CMaster() { Uninit(); };
+  I2cMaster(Name, uint32_t baud);
+  ~I2cMaster() { Uninit(); };
 
   /**
    * Read register of slave

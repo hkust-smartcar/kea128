@@ -11,7 +11,7 @@
 #include "libbase/i2c_master.h"
 namespace libbase {
 
-uint16_t I2CMaster::SCLDivider[0x40]  =
+uint16_t I2cMaster::SCLDivider[0x40]  =
 {
     20, 22, 24, 26, 28, 30, 34, 40, 28, 32, 36, 40, 44, 48, 56, 68,
     48, 56, 64, 72, 80, 88, 104, 128, 80, 96, 112, 128, 144, 160, 192, 240,
@@ -19,7 +19,7 @@ uint16_t I2CMaster::SCLDivider[0x40]  =
     640, 768, 896, 1024, 1152, 1280, 1536, 1920, 1280, 1536, 1792, 2048, 2304, 2560, 3072, 3840
 };
 
-I2CMaster::I2CMaster(Name n, uint32_t baud) {
+I2cMaster::I2cMaster(Name n, uint32_t baud) {
   if (n == Name::kI2C0) {
     SIM->SCGC |= SIM_SCGC_I2C0_MASK;
     SIM->PINSEL &= ~(uint32_t)SIM_PINSEL_I2C0PS_MASK;
@@ -54,7 +54,7 @@ I2CMaster::I2CMaster(Name n, uint32_t baud) {
   assert( m_baud <= 100000 ); // baud must be less than 100k
 }
 
-void I2CMaster::RxWait() {
+void I2cMaster::RxWait() {
   uint16_t num = 0;
   while(( i2cn->S1 & I2C_S_IICIF_MASK)==0) {
     num++;
@@ -63,7 +63,7 @@ void I2CMaster::RxWait() {
   i2cn->S1 |= I2C_S_IICIF_MASK ;
 }
 
-uint8_t I2CMaster::ReadReg(uint8_t SlaveID, uint8_t reg) {
+uint8_t I2cMaster::ReadReg(uint8_t SlaveID, uint8_t reg) {
   SendStart();
   SetTx((SlaveID << 1) | 0x00);
   SetTx(reg);
@@ -83,7 +83,7 @@ uint8_t I2CMaster::ReadReg(uint8_t SlaveID, uint8_t reg) {
   return result;
 }
 
-void I2CMaster::ReadRegs(uint8_t SlaveID, uint8_t first_reg, uint8_t count, uint8_t* buf) {
+void I2cMaster::ReadRegs(uint8_t SlaveID, uint8_t first_reg, uint8_t count, uint8_t* buf) {
   SendStart();
   SetTx((SlaveID << 1) | 0x00);
   SetTx(first_reg);
@@ -105,7 +105,7 @@ void I2CMaster::ReadRegs(uint8_t SlaveID, uint8_t first_reg, uint8_t count, uint
   Delay(); // mandatory delay
 }
 
-void I2CMaster::WriteReg(uint8_t SlaveID, uint8_t reg, uint8_t val) {
+void I2cMaster::WriteReg(uint8_t SlaveID, uint8_t reg, uint8_t val) {
   SendStart();
   SetTx((SlaveID << 1) | 0x00);
   SetTx(reg);
@@ -114,7 +114,7 @@ void I2CMaster::WriteReg(uint8_t SlaveID, uint8_t reg, uint8_t val) {
   Delay();
 }
 
-void I2CMaster::Uninit() {
+void I2cMaster::Uninit() {
   if (i2cn == I2C0) {
     SIM->SCGC &= ~SIM_SCGC_I2C0_MASK;
   } else {

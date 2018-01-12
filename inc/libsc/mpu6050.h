@@ -8,11 +8,11 @@
 #pragma once
 #include "libbase/soft_i2c_master.h"
 
-using libbase::SoftI2CMaster;
+using libbase::SoftI2cMaster;
 
 namespace libsc {
 
-class MPU6050 {
+class Mpu6050 {
 public:
   enum Registers : uint8_t {
      SMPLRT_DIV     =   0x19,  // default 0x07
@@ -41,13 +41,13 @@ public:
     int16_t x; int16_t y; int16_t z;
   };
 
-  MPU6050(libbase::Pin::Name sda, libbase::Pin::Name scl);
-  ~MPU6050();
+  Mpu6050(libbase::Pin::Name sda, libbase::Pin::Name scl);
+  ~Mpu6050();
   Triplet_i16 GetGyro();
   Triplet_i16 GetAcc();
 
 
-  SoftI2CMaster* m_i2c;
+  SoftI2cMaster* m_i2c;
 private:
   static uint8_t reg;
 

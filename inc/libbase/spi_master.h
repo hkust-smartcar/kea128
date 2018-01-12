@@ -12,7 +12,7 @@
 
 namespace libbase {
 
-class SPIMaster {
+class SpiMaster {
 public:
   /**
    * SPI0_SCK: B2; SPI0_MOSI: B3; SPI0_MISO: B4; SPI0_PCS: B5
@@ -20,8 +20,8 @@ public:
    */
   enum struct Name { kSPI0, kSPI1 };
 
-  SPIMaster(Name, uint32_t baud);
-  ~SPIMaster() { Uninit(); };
+  SpiMaster(Name, uint32_t baud);
+  ~SpiMaster() { Uninit(); };
 
   /**
    * Exchange bytes

@@ -9,18 +9,18 @@
 #include "libbase/gpio.h"
 namespace libbase {
 
-SoftI2CMaster::SoftI2CMaster(libbase::Pin::Name sda, libbase::Pin::Name scl) :
+SoftI2cMaster::SoftI2cMaster(libbase::Pin::Name sda, libbase::Pin::Name scl) :
   m_sda(libbase::Gpo(sda, true)), m_scl(libbase::Gpo(scl, true)) {
   Pin::PullEnable(sda, true);
 //  Pin::PullEnable(scl, true);
 }
 
-SoftI2CMaster::~SoftI2CMaster() {
+SoftI2cMaster::~SoftI2cMaster() {
   Pin::PullEnable((Pin::Name)m_sda.GetPin(), false);
   Pin::PullEnable((Pin::Name)m_scl.GetPin(), false);
 }
 
-void SoftI2CMaster::SendStart() {
+void SoftI2cMaster::SendStart() {
     SDA1();
     SCL1();
     Delay();
@@ -29,7 +29,7 @@ void SoftI2CMaster::SendStart() {
     SCL0();
 }
 
-void SoftI2CMaster::SendStop() {
+void SoftI2cMaster::SendStop() {
     SDA0();
     SCL0();
     Delay();
@@ -39,7 +39,7 @@ void SoftI2CMaster::SendStop() {
     Delay();
 }
 
-void SoftI2CMaster::SendACK(bool isACK) {
+void SoftI2cMaster::SendACK(bool isACK) {
   SCL0();
   Delay();
   if(isACK) SDA0();
@@ -50,7 +50,7 @@ void SoftI2CMaster::SendACK(bool isACK) {
   Delay();
 }
 
-bool SoftI2CMaster::WaitACK() {
+bool SoftI2cMaster::WaitACK() {
   SCL0();
 //  SDA_in();
 //  Gpi m_sda_i = m_sda.ToGpi();
@@ -85,7 +85,7 @@ bool SoftI2CMaster::WaitACK() {
   return !state;
 }
 
-void SoftI2CMaster::SendByte(uint8_t b) {
+void SoftI2cMaster::SendByte(uint8_t b) {
   uint8_t i = 8;
   while(i--)
   {
@@ -100,7 +100,7 @@ void SoftI2CMaster::SendByte(uint8_t b) {
   WaitACK();
 }
 
-uint8_t SoftI2CMaster::ReadByte(bool needACK) {
+uint8_t SoftI2cMaster::ReadByte(bool needACK) {
   uint8_t c = 0;
   SCL0();
   Delay();
@@ -135,7 +135,7 @@ uint8_t SoftI2CMaster::ReadByte(bool needACK) {
 }
 
 
-void SoftI2CMaster::WriteReg(uint8_t ID, uint8_t reg, uint8_t data) {
+void SoftI2cMaster::WriteReg(uint8_t ID, uint8_t reg, uint8_t data) {
   SendStart();
   SendByte( (ID<<1) | 0x00 );
   Delay();
@@ -147,7 +147,7 @@ void SoftI2CMaster::WriteReg(uint8_t ID, uint8_t reg, uint8_t data) {
   Delay();
 }
 
-uint8_t SoftI2CMaster::ReadReg(uint8_t ID, uint8_t reg) {
+uint8_t SoftI2cMaster::ReadReg(uint8_t ID, uint8_t reg) {
   uint8_t data;
   SendStart();
   SendByte( (ID<<1) | 0x00 );
@@ -161,7 +161,7 @@ uint8_t SoftI2CMaster::ReadReg(uint8_t ID, uint8_t reg) {
   return data;
 }
 
-void SoftI2CMaster::ReadRegs(uint8_t ID, uint8_t first_reg, uint8_t count, uint8_t* buf) {
+void SoftI2cMaster::ReadRegs(uint8_t ID, uint8_t first_reg, uint8_t count, uint8_t* buf) {
   SendStart();
   SendByte( (ID<<1) | 0x00 );
   SendByte(first_reg);
