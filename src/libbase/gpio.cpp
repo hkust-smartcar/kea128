@@ -77,9 +77,9 @@ Gpo::Gpo(Gpio::Name p, bool init) : m_pin(p){
 
 void Gpo::Set(bool is_high) {
   if (is_high)
-    RESET_BIT(MEM_MAPS[ptx]->PDOR, ptn);
-  else
     SET_BIT(MEM_MAPS[ptx]->PDOR, ptn);
+  else
+    RESET_BIT(MEM_MAPS[ptx]->PDOR, ptn);
 }
 
 void Gpo::Uninit() {

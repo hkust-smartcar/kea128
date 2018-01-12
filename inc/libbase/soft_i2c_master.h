@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include "libbase/pin.h"
 #include "libbase/gpio.h"
 
 namespace libbase {
@@ -28,7 +29,7 @@ private:
   inline void SCL1() { m_scl.Set(true); }
 //  inline void SDA_in() { m_sda_i = m_sda.ToGpi(); }
 //  inline void SDA_out() { m_sda = m_sda_i.ToGpo(false); }
-  inline void Delay() { volatile uint16_t j = 10; while(j--); }
+  inline void Delay() { volatile uint32_t j = 10; while(j--); }
 
   /**
    * Send Start

@@ -53,22 +53,36 @@ void SoftI2CMaster::SendACK(bool isACK) {
 bool SoftI2CMaster::WaitACK() {
   SCL0();
 //  SDA_in();
-  Gpi m_sda_i = m_sda.ToGpi();
+//  Gpi m_sda_i = m_sda.ToGpi();
+
+
+  // Set SDA to GPI
+  Pin::Name p = (Pin::Name)m_sda.GetPin();
+  uint8_t ptx = Pin::getPTX(p);
+  uint8_t ptn = Pin::getPTN(p);
+  RESET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
+
   Delay();
   SCL1();
   Delay();
-  if(m_sda_i.Get())
-  {
-//      SDA_out();
-      m_sda = m_sda_i.ToGpo(false);
-      SCL0();
-      return false;
-  }
+  bool state = ((MEM_MAPS[ptx]->PDIR) >> ptn) & 0x1;
+//  if(state)
+//  {
+////      SDA_out();
+//      m_sda = m_sda_i.ToGpo(false);
+//      SCL0();
+//      Delay();
+//      return false;
+//  }
 //  SDA_out();
-  m_sda = m_sda_i.ToGpo(false);
+  // Set SDA to GPO
+  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+  SET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
+
   SCL0();
   Delay();
-  return true;
+  return !state;
 }
 
 void SoftI2CMaster::SendByte(uint8_t b) {
@@ -92,7 +106,14 @@ uint8_t SoftI2CMaster::ReadByte(bool needACK) {
   Delay();
   SDA1();
 //  SDA_in();
-  Gpi m_sda_i = m_sda.ToGpi();
+//  Gpi m_sda_i = m_sda.ToGpi();
+
+  Pin::Name p = (Pin::Name)m_sda.GetPin();
+  uint8_t ptx = Pin::getPTX(p);
+  uint8_t ptn = Pin::getPTN(p);
+  RESET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+  RESET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
+
   for(int i=0;i<8;i++) {
       Delay();
       SCL0();
@@ -100,10 +121,12 @@ uint8_t SoftI2CMaster::ReadByte(bool needACK) {
       SCL1();
       Delay();
       c<<=1;
-      if(m_sda_i.Get()) c+=1;
+      if(((MEM_MAPS[ptx]->PDIR) >> ptn) & 0x1) c+=1;
   }
 //  SDA_out();
-  m_sda = Gpo(m_sda_i.GetPin(), false);
+//  m_sda = Gpo(m_sda_i.GetPin(), false);
+  SET_BIT(MEM_MAPS[ptx]->PIDR, ptn);
+  SET_BIT(MEM_MAPS[ptx]->PDDR, ptn);
   SCL0();
   Delay();
   SendACK(needACK);
