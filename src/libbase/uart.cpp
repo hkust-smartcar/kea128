@@ -17,14 +17,14 @@ Uart* uart0;
 Uart* uart1;
 Uart* uart2;
 
-void (*uart0_rx_full_listener)(Uart*);
-void (*uart0_tx_empty_listener)(Uart*);
-void (*uart1_rx_full_listener)(Uart*);
-void (*uart1_tx_empty_listener)(Uart*);
-void (*uart2_rx_full_listener)(Uart*);
-void (*uart2_tx_empty_listener)(Uart*);
+std::function<void(Uart*)> uart0_rx_full_listener;
+std::function<void(Uart*)> uart0_tx_empty_listener;
+std::function<void(Uart*)> uart1_rx_full_listener;
+std::function<void(Uart*)> uart1_tx_empty_listener;
+std::function<void(Uart*)> uart2_rx_full_listener;
+std::function<void(Uart*)> uart2_tx_empty_listener;
 
-Uart::Uart(Name uartn, uint32_t &baudrate, void (*rx_full_listener)(Uart*), void (*tx_empty_listener)(Uart*)) :
+Uart::Uart(Name uartn, uint32_t &baudrate, std::function<void(Uart*)> rx_full_listener, std::function<void(Uart*)> tx_empty_listener) :
 		uartn(uartn) {
 	SIM->SCGC |= 1 << (SIM_SCGC_UART0_SHIFT + (uint8_t) uartn);
 	switch (uartn) {
