@@ -12,7 +12,7 @@ namespace libbase {
 SoftI2CMaster::SoftI2CMaster(libbase::Pin::Name sda, libbase::Pin::Name scl) :
   m_sda(libbase::Gpo(sda, true)), m_scl(libbase::Gpo(scl, true)) {
   Pin::PullEnable(sda, true);
-  Pin::PullEnable(scl, true);
+//  Pin::PullEnable(scl, true);
 }
 
 SoftI2CMaster::~SoftI2CMaster() {

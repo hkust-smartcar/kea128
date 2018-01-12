@@ -7,7 +7,7 @@
  */
 
 #include "libsc/mpu6050.h"
-
+#include "libbase/sys_tick.h"
 
 namespace libsc {
 uint8_t MPU6050::reg = 0x68;
@@ -16,8 +16,7 @@ MPU6050::MPU6050(libbase::Pin::Name sda, libbase::Pin::Name scl) {
 //  m_i2c = new I2CMaster(n, 85000);
   m_i2c = new SoftI2CMaster(sda, scl);
 
-  m_i2c->ReadReg(0x68, 0x75);
-  m_i2c->ReadReg(0x68, 0x75);
+  m_i2c->WriteReg(reg, Registers::PWR_MGMT_1, 0x00);
 //  m_i2c->WriteReg(reg, Registers::PWR_MGMT_1, 0x00); // awake
   m_i2c->WriteReg(reg, Registers::PWR_MGMT_1, 0x00); // awake
   m_i2c->WriteReg(reg, Registers::SMPLRT_DIV, 0x07); // 125Hz sampling rate
@@ -27,6 +26,7 @@ MPU6050::MPU6050(libbase::Pin::Name sda, libbase::Pin::Name scl) {
   m_i2c->WriteReg(reg, Registers::User_Control, 0x00);
   m_i2c->WriteReg(reg, Registers::INT_PIN_CFG, 0x02);
 
+  libbase::Systick::DelayMs(50);
 }
 
 MPU6050::~MPU6050() {
