@@ -138,9 +138,13 @@ uint8_t SoftI2CMaster::ReadByte(bool needACK) {
 void SoftI2CMaster::WriteReg(uint8_t ID, uint8_t reg, uint8_t data) {
   SendStart();
   SendByte( (ID<<1) | 0x00 );
+  Delay();
   SendByte(reg);
+  Delay();
   SendByte(data);
+  Delay();
   SendStop();
+  Delay();
 }
 
 uint8_t SoftI2CMaster::ReadReg(uint8_t ID, uint8_t reg) {

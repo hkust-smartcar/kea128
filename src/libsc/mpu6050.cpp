@@ -12,18 +12,20 @@
 namespace libsc {
 uint8_t MPU6050::reg = 0x68;
 
-MPU6050::MPU6050(I2CMaster::Name n) {
-  m_i2c = new I2CMaster(n, 85000);
+MPU6050::MPU6050(libbase::Pin::Name sda, libbase::Pin::Name scl) {
+//  m_i2c = new I2CMaster(n, 85000);
+  m_i2c = new SoftI2CMaster(sda, scl);
 
-
+  m_i2c->ReadReg(0x68, 0x75);
+  m_i2c->ReadReg(0x68, 0x75);
 //  m_i2c->WriteReg(reg, Registers::PWR_MGMT_1, 0x00); // awake
-//  m_i2c->WriteReg(reg, Registers::SMPLRT_DIV, 0x07); // 125Hz sampling rate
-////  volatile int a = m_i2c->ReadReg(reg, Registers::SMPLRT_DIV);
-//  m_i2c->WriteReg(reg, Registers::CONFIG, 0x04);
-//  m_i2c->WriteReg(reg, Registers::GYRO_CONFIG, 0x18); // Full scale range +- 2000deg /s
-//  m_i2c->WriteReg(reg, Registers::ACCEL_CONFIG, 0x10); // Full scale range +- 8g
-//  m_i2c->WriteReg(reg, Registers::User_Control, 0x00);
-//  m_i2c->WriteReg(reg, Registers::INT_PIN_CFG, 0x02);
+  m_i2c->WriteReg(reg, Registers::PWR_MGMT_1, 0x00); // awake
+  m_i2c->WriteReg(reg, Registers::SMPLRT_DIV, 0x07); // 125Hz sampling rate
+  m_i2c->WriteReg(reg, Registers::CONFIG, 0x04);
+  m_i2c->WriteReg(reg, Registers::GYRO_CONFIG, 0x18); // Full scale range +- 2000deg /s
+  m_i2c->WriteReg(reg, Registers::ACCEL_CONFIG, 0x10); // Full scale range +- 8g
+  m_i2c->WriteReg(reg, Registers::User_Control, 0x00);
+  m_i2c->WriteReg(reg, Registers::INT_PIN_CFG, 0x02);
 
 }
 
