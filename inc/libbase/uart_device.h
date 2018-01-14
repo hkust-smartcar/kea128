@@ -12,7 +12,7 @@
 
 namespace libbase {
 
-class Uart {
+class UartDevice {
 public:
 	/*
 	 * Uart0 TX: B1 Uart0 RX: B0
@@ -23,9 +23,18 @@ public:
 		kUart0 = 0, kUart1, kUart2 = 2
 	};
 
-	Uart(Name uartn, uint32_t &baudrate, std::function<void(Uart*)> rx_full_listener, std::function<void(Uart*)> tx_empty_listener);
+	struct Config {
+		Name uartn;
+		uint32_t baudrate;
+		std::function<void(UartDevice*)> rx_full_listener = nullptr;
+		std::function<void(UartDevice*)> tx_empty_listener = nullptr;
+	};
+
+	UartDevice(Config config);
 	uint8_t GetByte() const;
-	void SendByte(const uint8_t byte);
+	void SendBuffer(const uint8_t buff);
+	void SendBuffer(const uint8_t* buff, uint16_t buff_length);
+	void SendBufferNoWait(const uint8_t buff);
 
 private:
 	const Name uartn;
