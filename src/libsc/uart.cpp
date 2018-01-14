@@ -32,3 +32,14 @@ void Uart::SendBuffer(const uint8_t* buff, uint32_t buff_length) {
 	if (index != 1)
 		SendBufferNoWait(buff[0]);
 }
+
+uint16_t Uart::GetBuffer(uint8_t* buff) {
+	uint16_t size = rx_buff.size();
+	uint8_t* data = new uint8_t[size];
+	for (uint16_t i = 0; i < size; ++i) {
+		data[i] = rx_buff.front();
+		rx_buff.pop();
+	}
+	buff = data;
+	return size;
+}

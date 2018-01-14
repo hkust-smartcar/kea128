@@ -28,6 +28,7 @@ public:
 	};
 
 	Uart(Config config);
+	uint16_t GetBuffer(uint8_t* buff);
 	void SendBuffer(const uint8_t* buff, uint32_t buff_length);
 
 private:
