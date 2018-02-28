@@ -27,12 +27,12 @@ public:
 		std::function<void(std::queue<uint8_t>)> rx_isr = nullptr;
 	};
 
-	Uart(Config config);
+	Uart(Config &config);
 	uint16_t GetBuffer(uint8_t* buff);
 	void SendBuffer(const uint8_t* buff, uint32_t buff_length);
 
 private:
-	libbase::UartDevice::Config GetUartDeviceConfig(Uart::Config config);
+	libbase::UartDevice::Config& GetUartDeviceConfig(Uart::Config &config);
 	std::queue<uint8_t> tx_buff;
 	std::queue<uint8_t> rx_buff;
 	const uint16_t tx_buffer_size;

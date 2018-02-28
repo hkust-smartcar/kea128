@@ -11,7 +11,7 @@
 
 using namespace libbase;
 
-UartDevice::Config Uart::GetUartDeviceConfig(Uart::Config config) {
+UartDevice::Config& Uart::GetUartDeviceConfig(Uart::Config &config) {
 	UartDevice::Config device_config;
 	assert(config.id < 3 || config.tx_buffer_size > 0);
 	device_config.uartn = (UartDevice::Name) config.id;
@@ -21,7 +21,7 @@ UartDevice::Config Uart::GetUartDeviceConfig(Uart::Config config) {
 	return device_config;
 }
 
-Uart::Uart(Config config) :
+Uart::Uart(Config &config) :
 		UartDevice(GetUartDeviceConfig(config)), tx_buffer_size(config.tx_buffer_size) {
 }
 

@@ -25,7 +25,7 @@ std::function<void(UartDevice*)> uart1_tx_empty_listener;
 std::function<void(UartDevice*)> uart2_rx_full_listener;
 std::function<void(UartDevice*)> uart2_tx_empty_listener;
 
-UartDevice::UartDevice(Config config) :
+UartDevice::UartDevice(Config &config) :
 		uartn(config.uartn) {
 	SIM->SCGC |= 1 << (SIM_SCGC_UART0_SHIFT + (uint8_t) uartn);
 	switch (uartn) {

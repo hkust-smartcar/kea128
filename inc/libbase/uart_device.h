@@ -30,7 +30,7 @@ public:
 		std::function<void(UartDevice*)> tx_empty_listener = nullptr;
 	};
 
-	UartDevice(Config config);
+	UartDevice(Config &config);
 	uint8_t GetByte() const;
 	void SendBuffer(const uint8_t buff);
 	void SendBuffer(const uint8_t* buff, uint16_t buff_length);
