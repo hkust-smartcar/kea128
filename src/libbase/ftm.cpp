@@ -100,6 +100,7 @@ void Ftm::InitOutput(CHANNEL ch, uint32_t freq, uint32_t duty_cycle) {
 	mod = (clk_hz >> ps) / freq;
 	period = mod;
 	//Use FTM2 base ptr only as only FTM2 can set pwm output
+	FTM2->SC = 0;
 	FTM2->MOD = mod;
 	FTM2->CONTROLS[(uint8_t) ch].CnSC &= ~FTM_CnSC_ELSA_MASK;
 	FTM2->CONTROLS[(uint8_t) ch].CnSC = FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
@@ -127,6 +128,7 @@ void Ftm::SetFreq(uint32_t freq) {
 	assert(ps <= 0x07);
 	mod = (clk_hz >> ps) / freq;
 	period = mod;
+	FTM2->SC = 0;
 	FTM2->MOD = mod;
 	FTM2->SC = (0 | FTM_SC_PS(ps) | FTM_SC_CLKS(1));
 	FTM2->CNTIN = 0;
