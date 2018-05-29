@@ -20,7 +20,7 @@ extern "C" {
  * CLOCK_MODE 2  Core frequency 48Mhz  Bus frequency 24Mhz  Timer frequency 48Mhz  Uses internal crystal
  */
 #define CLOCK_MODE 0
-#define CRYSTAL_CLK 16000
+#define CRYSTAL_CLK 19200
 
 void get_clk();
 void SystemInit();

@@ -6,9 +6,8 @@
  * Refer to LICENSE for details
  */
 #pragma once
-#include "libbase/soft_i2c_master.h"
-
-using libbase::SoftI2cMaster;
+#include <utility>
+#include "libbase/i2c_master.h"
 
 namespace libsc {
 
@@ -41,15 +40,15 @@ public:
     int16_t x; int16_t y; int16_t z;
   };
 
-  Mpu6050(libbase::Pin::Name sda, libbase::Pin::Name scl);
+  Mpu6050(libbase::I2cMaster::Name n, uint32_t baud);
   ~Mpu6050();
   Triplet_i16 GetGyro();
   Triplet_i16 GetAcc();
 
-
-  SoftI2cMaster* m_i2c;
 private:
   static uint8_t reg;
+
+  libbase::I2cMaster * mpu;
 
 };
 }

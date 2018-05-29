@@ -60,6 +60,27 @@ Kbi::Kbi(Name name, Interrupt interrupt, std::function<void(Kbi*)> listener) {
 	KBIX[(uint8_t) name]->SC |= (0 | KBI_SC_KBIE_MASK | KBI_SC_RSTKBSP_MASK | KBI_SC_KBSPEN_MASK);
 }
 
+//newly added
+void Kbi::initKbi() {
+
+	if (kbin == libbase::Kbi::Name::kKbi0) {
+		KBI0->SC |= KBI_SC_KBACK_MASK;
+		kbi0->SetState((bool) (KBI0->ES & ((uint32_t)(1 << 21))));
+		kbi0_listener(kbi0);
+		if (kbi0->GetInterrupt() == libbase::Kbi::Interrupt::kBoth) {
+			KBI0->ES ^= ((uint32_t)(1 << 21));
+		}
+	} else if (kbin == libbase::Kbi::Name::kKbi1) {
+		KBI1->SC |= KBI_SC_KBACK_MASK;
+		kbi1->SetState((bool) (KBI1->ES & ((uint32_t)(1 << 26))));
+		kbi1_listener(kbi1);
+		if (kbi1->GetInterrupt() == libbase::Kbi::Interrupt::kBoth) {
+			KBI1->ES ^= ((uint32_t)(1 << 26));
+		}
+	}
+
+}
+
 extern "C" {
 __ISR void KBI0_IRQHandler(void) {
 	KBI0->SC |= KBI_SC_KBACK_MASK;

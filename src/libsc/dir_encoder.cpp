@@ -11,7 +11,17 @@
 namespace libsc {
 
 DirEncoder::DirEncoder(uint8_t id) :
-		counter(id ? libbase::Ftm::Name::kFTM0 : libbase::Ftm::Name::kFTM1, id ? libbase::Ftm::EXT_CLK::kTCK_2 : libbase::Ftm::EXT_CLK::kTCK_1, [this](libbase::Ftm* ftm) {count += direction ? ftm->GetCount() : -ftm->GetCount(); ftm->CleanCount();}), dir(id ? libbase::Kbi::Name::kKbi1 : libbase::Kbi::Name::kKbi0, libbase::Kbi::Interrupt::kBoth, [this](libbase::Kbi* kbi) {direction = kbi->GetState(); count = 0; counter.CleanCount();}) {
+		counter(id ? libbase::Ftm::Name::kFTM0 : libbase::Ftm::Name::kFTM1, id ? libbase::Ftm::EXT_CLK::kTCK_2 : libbase::Ftm::EXT_CLK::kTCK_1,
+				[this](libbase::Ftm* ftm) {
+					count += direction ? ftm->GetCount() : -ftm->GetCount();
+					ftm->CleanCount();
+				}),
+		dir(id ? libbase::Kbi::Name::kKbi1 : libbase::Kbi::Name::kKbi0, libbase::Kbi::Interrupt::kBoth,
+				[this](libbase::Kbi* kbi) {
+					direction = kbi->GetState();
+					count = 0;
+					counter.CleanCount();}) {
+	dir.initKbi();direction = dir.GetState();
 }
 
 int32_t DirEncoder::GetCount() {

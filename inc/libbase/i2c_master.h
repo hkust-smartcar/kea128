@@ -10,6 +10,8 @@
 
 #include "libbase/cmsis/SKEAZ1284.h"
 
+#include <libbase/sys_tick.h>
+
 namespace libbase {
 
 class I2cMaster {

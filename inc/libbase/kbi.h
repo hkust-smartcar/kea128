@@ -27,6 +27,8 @@ public:
 
 	Kbi(Name name, Interrupt interrupt, std::function<void(Kbi*)> listener);
 
+	void initKbi();
+
 	bool GetState() const {
 		return state;
 	}

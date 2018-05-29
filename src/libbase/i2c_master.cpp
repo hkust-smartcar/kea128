@@ -9,6 +9,7 @@
 #include "libbase/math.h"
 #include "assert.h"
 #include "libbase/i2c_master.h"
+
 namespace libbase {
 
 uint16_t I2cMaster::SCLDivider[0x40]  =
@@ -48,16 +49,18 @@ I2cMaster::I2cMaster(Name n, uint32_t baud) {
     }
   }
   i2cn->F = I2C_F_MULT(mul) | I2C_F_ICR(min_diff_id);
-  i2cn->C1 = I2C_C1_IICEN_MASK|I2C_C1_TXAK_MASK;
+  i2cn->C1 = I2C_C1_IICEN_MASK|0;
+//  i2cn->C1 = I2C_C1_IICEN_MASK|I2C_C1_TXAK_MASK;
   m_baud = bus_clk_khz * 1000 / ( (1<<mul) * SCLDivider[min_diff_id]);
 
   assert( m_baud <= 100000 ); // baud must be less than 100k
 }
 
 void I2cMaster::RxWait() {
-  uint16_t num = 0;
+  uint32_t num = 0;
   while(( i2cn->S1 & I2C_S_IICIF_MASK)==0) {
     num++;
+//    libbase::Systick::DelayCycle(100);
     assert (num <= 500); // Time out
   }
   i2cn->S1 |= I2C_S_IICIF_MASK ;
