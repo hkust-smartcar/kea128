@@ -55,12 +55,12 @@ bool Flash::Write(uint32_t sectorNum, uint32_t offset, uint8_t* buff, size_t siz
 		FTMRE->FCCOBLO = addr & 0xFC;
 
 		FTMRE->FCCOBIX = 2;
-		FTMRE->FCCOBLO = buff[i];
-		FTMRE->FCCOBHI = buff[i + 1];
+		FTMRE->FCCOBLO = buff[0];
+		FTMRE->FCCOBHI = buff[1];
 
 		FTMRE->FCCOBIX = 3;
-		FTMRE->FCCOBLO = buff[i + 2];
-		FTMRE->FCCOBHI = buff[i + 3];
+		FTMRE->FCCOBLO = buff[2];
+		FTMRE->FCCOBHI = buff[3];
 
 		buff += 4;
 		addr += 4;
@@ -73,6 +73,7 @@ bool Flash::Write(uint32_t sectorNum, uint32_t offset, uint8_t* buff, size_t siz
 
 bool Flash::FlashCmdStart() {
 	NVIC_DisableIRQ(FTMRE_IRQn);
+	MCM->PLACR |= MCM_PLACR_ESFC_MASK;
 	FTMRE->FSTAT = FTMRE_FSTAT_FPVIOL_MASK | FTMRE_FSTAT_ACCERR_MASK;
 	s_flash_run_entry = (flash_run_entry_t) ((uint32_t) s_flash_command_run + 1);
 	s_flash_run_entry(&FTMRE->FSTAT);
